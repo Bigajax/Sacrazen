@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FioDeLuas } from "./Teto";
 import { linkWhatsApp } from "@/lib/whatsapp";
-import { site } from "@/data/site.config";
 import type { Produto } from "@/lib/tipos";
 
 /**
@@ -52,8 +51,8 @@ export function FormAgenda({ opcoes, whatsapp }: { opcoes: Produto[]; whatsapp: 
     .join(" ");
 
   return (
-    <div className="mx-auto max-w-[24rem] overflow-hidden rounded-[10px] bg-cartao text-tinta shadow-[0_18px_50px_-20px_rgba(9,18,38,0.6)] lg:mx-0">
-      <div role="tablist" aria-label="Atendimento" className="flex bg-parede">
+    <div className="mx-auto max-w-[24rem] rounded-[10px] bg-cartao text-tinta shadow-[0_18px_50px_-20px_rgba(9,18,38,0.6)] lg:mx-0">
+      <div role="tablist" aria-label="Atendimento" className="flex rounded-t-[10px] bg-parede">
         {opcoes.slice(0, 2).map((o, i) => {
           const ativa = aba === i;
           return (
@@ -80,20 +79,7 @@ export function FormAgenda({ opcoes, whatsapp }: { opcoes: Produto[]; whatsapp: 
           window.open(linkWhatsApp(mensagem, whatsapp), "_blank", "noopener");
         }}
       >
-        <div className="flex items-start justify-between gap-4">
-          <p className="manchete max-w-[14ch] text-[1.125rem] uppercase leading-[1.2] text-tinta">
-            Agende sua consulta com dois pais de santo
-          </p>
-          {/* o selo redondo é um fato, não um slogan: a nota da loja no Google */}
-          <span
-            role="img"
-            aria-label={`Nota ${site.google.nota} no Google`}
-            className="flex h-[4.25rem] w-[4.25rem] shrink-0 -rotate-6 flex-col items-center justify-center rounded-full bg-latao text-center leading-none text-noite"
-          >
-            <span className="text-[1.25rem] font-extrabold">{site.google.nota}</span>
-            <span className="mt-0.5 text-[0.5625rem] font-bold uppercase tracking-[0.06em]">no Google</span>
-          </span>
-        </div>
+        <p className="manchete text-[1.125rem] uppercase leading-[1.2] text-tinta">Agende sua consulta com dois pais de santo</p>
         <p className="falada mt-2 text-[0.9375rem] text-tinta-fraca">{texto.frase}</p>
 
         <FioDeLuas className="my-4 h-3 w-[10.5rem]" />
@@ -103,17 +89,7 @@ export function FormAgenda({ opcoes, whatsapp }: { opcoes: Produto[]; whatsapp: 
             <span>Seu nome</span>
             <input value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Como a gente deve te chamar" />
           </label>
-          <label className="campo-flutuante">
-            <span>Sobre o que você quer falar</span>
-            <select value={assunto} onChange={(e) => setAssunto(e.target.value)}>
-              <option value="">Escolha, ou deixe em branco</option>
-              {ASSUNTOS.map((a) => (
-                <option key={a} value={a}>
-                  {a}
-                </option>
-              ))}
-            </select>
-          </label>
+          <Seletor rotulo="Sobre o que você quer falar" valor={assunto} opcoes={ASSUNTOS} aoEscolher={setAssunto} />
         </div>
 
         <button type="submit" className="btn btn--latao mt-5 w-full py-4 text-[0.9375rem]">
@@ -121,6 +97,107 @@ export function FormAgenda({ opcoes, whatsapp }: { opcoes: Produto[]; whatsapp: 
         </button>
         <p className="miudo mt-3">Dia, horário e valor se combinam na conversa, pelo WhatsApp.</p>
       </form>
+    </div>
+  );
+}
+
+/**
+ * A lista de assuntos, no lugar do <select> nativo: a caixa que abre é
+ * nossa (branca, cantos arredondados, sombra baixa, o escolhido com a
+ * marca), não a do sistema. Teclado: setas, Enter, Esc. Fecha ao clicar
+ * fora.
+ */
+function Seletor({
+  rotulo,
+  valor,
+  opcoes,
+  aoEscolher,
+}: {
+  rotulo: string;
+  valor: string;
+  opcoes: string[];
+  aoEscolher: (v: string) => void;
+}) {
+  const [aberto, setAberto] = useState(false);
+  const [foco, setFoco] = useState(0);
+  const raiz = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!aberto) return;
+    const fora = (e: MouseEvent) => {
+      if (!raiz.current?.contains(e.target as Node)) setAberto(false);
+    };
+    document.addEventListener("mousedown", fora);
+    return () => document.removeEventListener("mousedown", fora);
+  }, [aberto]);
+
+  function tecla(e: React.KeyboardEvent) {
+    if (e.key === "Escape") setAberto(false);
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      if (!aberto) setAberto(true);
+      setFoco((f) => Math.min(f + 1, opcoes.length - 1));
+    }
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setFoco((f) => Math.max(f - 1, 0));
+    }
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      if (aberto) {
+        aoEscolher(opcoes[foco]);
+        setAberto(false);
+      } else setAberto(true);
+    }
+  }
+
+  return (
+    <div ref={raiz} className="campo-flutuante">
+      <span>{rotulo}</span>
+      <button
+        type="button"
+        role="combobox"
+        aria-expanded={aberto}
+        aria-haspopup="listbox"
+        aria-controls="lista-assuntos"
+        onClick={() => setAberto((v) => !v)}
+        onKeyDown={tecla}
+        className={`seletor ${valor ? "" : "seletor--vazio"}`}
+      >
+        <span className="truncate">{valor || "Escolha, ou deixe em branco"}</span>
+        <svg viewBox="0 0 12 8" className={`h-2 w-3 shrink-0 transition-transform ${aberto ? "rotate-180" : ""}`} aria-hidden="true">
+          <path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+
+      {aberto ? (
+        <ul id="lista-assuntos" role="listbox" aria-label={rotulo} className="seletor__lista">
+          {opcoes.map((o, i) => {
+            const escolhido = o === valor;
+            return (
+              <li
+                key={o}
+                role="option"
+                aria-selected={escolhido}
+                data-foco={i === foco}
+                onMouseEnter={() => setFoco(i)}
+                onClick={() => {
+                  aoEscolher(escolhido ? "" : o);
+                  setAberto(false);
+                }}
+                className="seletor__opcao"
+              >
+                <span>{o}</span>
+                {escolhido ? (
+                  <svg viewBox="0 0 16 16" className="h-4 w-4 shrink-0" aria-hidden="true">
+                    <path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                ) : null}
+              </li>
+            );
+          })}
+        </ul>
+      ) : null}
     </div>
   );
 }
