@@ -62,6 +62,8 @@ export function Desenho({ slug, className = "h-16 w-16 shrink-0 rounded-full bg-
   );
 }
 
+const NUMERAIS = ["I", "II", "III"];
+
 export function Portas({ atendimentos }: { atendimentos: Produto[] }) {
   const tres = atendimentos.slice(0, 3);
   if (!tres.length) return null;
@@ -69,12 +71,20 @@ export function Portas({ atendimentos }: { atendimentos: Produto[] }) {
   return (
     <div className="relative z-10 mx-auto -mt-14 max-w-[72rem] px-4 sm:px-6 lg:-mt-16 lg:px-10">
       <div className="cartao grid divide-y divide-fio shadow-[0_18px_40px_-24px_rgba(9,18,38,0.5)] md:grid-cols-[1fr_1fr_1fr_auto] md:divide-x md:divide-y-0">
-        {tres.map((a) => (
+        {/* três cartas viradas na mesa: cada porta é uma carta com o seu
+            número e o seu desenho, como um arcano */}
+        {tres.map((a, i) => (
           <Link key={a.id} href={`/produto/${a.slug}`} className="group flex items-center gap-4 px-5 py-4 hover:bg-fundo">
-            <Desenho slug={a.slug} />
-            <span className="min-w-0">
+            <span className="carta" aria-hidden="true">
+              <span className="carta__numero">{NUMERAIS[i]}</span>
+              <Desenho slug={a.slug} className="h-9 w-9" />
+            </span>
+            <span className="min-w-0 flex-1">
               <span className="titulo-cartao block text-tinta group-hover:text-ametista">{a.nome.split(" com ")[0]}</span>
               <span className="falada mt-1 block text-[0.875rem] leading-snug text-tinta-fraca">{fraseDe(a)}</span>
+            </span>
+            <span aria-hidden="true" className="text-latao transition-transform group-hover:translate-x-0.5 md:hidden">
+              ›
             </span>
           </Link>
         ))}
