@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { FioDeLuas } from "./Teto";
 import { linkWhatsApp } from "@/lib/whatsapp";
+import { site } from "@/data/site.config";
 import type { Produto } from "@/lib/tipos";
 
 /**
@@ -83,14 +84,14 @@ export function FormAgenda({ opcoes, whatsapp }: { opcoes: Produto[]; whatsapp: 
           <p className="manchete max-w-[14ch] text-[1.125rem] uppercase leading-[1.2] text-tinta">
             Agende sua consulta com dois pais de santo
           </p>
-          {/* o selo redondo: a promessa da casa, em latão */}
+          {/* o selo redondo é um fato, não um slogan: a nota da loja no Google */}
           <span
-            aria-hidden="true"
-            className="flex h-[4.25rem] w-[4.25rem] shrink-0 -rotate-6 items-center justify-center rounded-full bg-latao text-center text-[0.625rem] font-extrabold uppercase leading-[1.15] tracking-[0.04em] text-noite"
+            role="img"
+            aria-label={`Nota ${site.google.nota} no Google`}
+            className="flex h-[4.25rem] w-[4.25rem] shrink-0 -rotate-6 flex-col items-center justify-center rounded-full bg-latao text-center leading-none text-noite"
           >
-            A mesa
-            <br />
-            te espera
+            <span className="text-[1.25rem] font-extrabold">{site.google.nota}</span>
+            <span className="mt-0.5 text-[0.5625rem] font-bold uppercase tracking-[0.06em]">no Google</span>
           </span>
         </div>
         <p className="falada mt-2 text-[0.9375rem] text-tinta-fraca">{texto.frase}</p>
@@ -115,21 +116,9 @@ export function FormAgenda({ opcoes, whatsapp }: { opcoes: Produto[]; whatsapp: 
           </label>
         </div>
 
-        <div className="mt-5 flex items-center justify-between gap-4">
-          <button type="submit" className="btn btn--latao px-6 py-4 text-[0.9375rem]">
-            {texto.botao}
-          </button>
-          <a
-            href={linkWhatsApp("Oi! Vi no site e tenho uma dúvida rápida antes de agendar.", whatsapp)}
-            target="_blank"
-            rel="noreferrer"
-            className="text-right text-[0.875rem] font-semibold leading-tight text-ametista hover:underline"
-          >
-            Só uma
-            <br />
-            dúvida rápida
-          </a>
-        </div>
+        <button type="submit" className="btn btn--latao mt-5 w-full py-4 text-[0.9375rem]">
+          {texto.botao}
+        </button>
         <p className="miudo mt-3">Dia, horário e valor se combinam na conversa, pelo WhatsApp.</p>
       </form>
     </div>
