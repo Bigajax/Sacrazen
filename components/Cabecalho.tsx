@@ -39,7 +39,7 @@ export function Cabecalho({ categorias, linkWhats, avisoTopo = "" }: { categoria
         </div>
       ) : null}
 
-      <div className="mx-auto flex h-[4.5rem] max-w-[72rem] items-center justify-between gap-3 px-4 sm:px-6 lg:grid lg:h-[6.5rem] lg:grid-cols-[1fr_auto_1fr] lg:px-10">
+      <div className="relative z-50 mx-auto flex h-[4.5rem] max-w-[72rem] items-center justify-between gap-3 bg-cartao px-4 sm:px-6 lg:grid lg:h-[6.5rem] lg:grid-cols-[1fr_auto_1fr] lg:px-10">
         <nav aria-label="Principal" className="order-1 flex items-center gap-4 lg:gap-5">
           <Link href="/catalogo" className="titulo-cartao hidden text-tinta hover:text-ametista sm:block">
             Catálogo
@@ -91,7 +91,9 @@ export function Cabecalho({ categorias, linkWhats, avisoTopo = "" }: { categoria
       </div>
 
       {aberto ? (
-        <nav id="menu-categorias" aria-label="Categorias" className="border-t border-fio bg-cartao">
+        <>
+          <button type="button" aria-label="Fechar o menu" onClick={() => setAberto(false)} className="fixed inset-0 z-40 bg-noite/40 lg:hidden" />
+          <nav id="menu-categorias" aria-label="Categorias" className="absolute inset-x-0 top-full z-50 border-t border-fio bg-cartao shadow-[0_18px_40px_-20px_rgba(9,18,38,0.45)]">
           <div className="mx-auto max-w-[72rem] px-4 py-5 sm:px-6 lg:px-10">
             <form onSubmit={buscar} className="mb-4 lg:hidden">
               <input
@@ -118,6 +120,7 @@ export function Cabecalho({ categorias, linkWhats, avisoTopo = "" }: { categoria
             </ul>
           </div>
         </nav>
+        </>
       ) : null}
     </header>
   );
