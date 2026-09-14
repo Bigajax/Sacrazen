@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Desenho } from "./Portas";
 import { FioDeLuas } from "./Teto";
 import { linkWhatsApp } from "@/lib/whatsapp";
 import type { Produto } from "@/lib/tipos";
@@ -46,8 +45,7 @@ export function FormAgenda({ opcoes, whatsapp }: { opcoes: Produto[]; whatsapp: 
 
   return (
     <div className="overflow-hidden rounded-[10px] bg-cartao text-tinta shadow-[0_18px_50px_-20px_rgba(9,18,38,0.6)]">
-      {/* a noite em cima: as duas abas são duas cartas viradas na mesa, cada
-          uma com o seu desenho; a escolhida está de frente (branca) */}
+      {/* a noite em cima: duas abas, a escolhida virada para cima (branca) */}
       <div className="bg-noite px-2 pt-2">
         <div role="tablist" aria-label="Atendimento" className="flex gap-2">
           {opcoes.slice(0, 2).map((o, i) => {
@@ -59,12 +57,11 @@ export function FormAgenda({ opcoes, whatsapp }: { opcoes: Produto[]; whatsapp: 
                 type="button"
                 aria-selected={ativa}
                 onClick={() => setAba(i)}
-                className={`flex flex-1 items-center gap-3 rounded-t-[8px] px-3 py-3 text-left transition-colors ${
+                className={`titulo-cartao flex-1 rounded-t-[8px] px-3 py-3.5 text-center transition-colors ${
                   ativa ? "bg-cartao text-tinta" : "text-cera/80 hover:text-cera"
                 }`}
               >
-                <Desenho slug={o.slug} className={`h-10 w-10 shrink-0 rounded-md p-1.5 ${ativa ? "bg-noite" : "border border-cera/25"}`} />
-                <span className="titulo-cartao leading-tight">{nomeDaAba(o)}</span>
+                {nomeDaAba(o)}
               </button>
             );
           })}
