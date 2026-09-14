@@ -79,19 +79,19 @@ export function FormAgenda({ opcoes, whatsapp }: { opcoes: Produto[]; whatsapp: 
           window.open(linkWhatsApp(mensagem, whatsapp), "_blank", "noopener");
         }}
       >
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="manchete text-[1.125rem] uppercase leading-tight text-tinta">Agende sua consulta</p>
-            <p className="falada mt-1 text-[0.9375rem] text-tinta-fraca">
+        <p className="manchete text-[1.125rem] uppercase leading-tight text-tinta">Agende sua consulta</p>
+        <p className="falada mt-1 text-[0.9375rem] text-tinta-fraca">
               {aba === 0 ? "Você não precisa chegar com a pergunta pronta. A mesa ajuda a achar." : "Para tirar o peso, abrir caminho e voltar a dormir."}
-            </p>
-          </div>
-          <span className="shrink-0 text-tinta opacity-80" aria-hidden="true">
-            <Marca parte="buda" altura={56} />
+        </p>
+
+        {/* o fio de luas à esquerda e o Buda da placa à direita, na mesma
+            linha: o título e a frase ficam com a largura inteira */}
+        <div className="my-4 flex items-center justify-between">
+          <FioDeLuas className="h-3 w-[10.5rem]" />
+          <span className="text-tinta opacity-70" aria-hidden="true">
+            <Marca parte="buda" altura={34} />
           </span>
         </div>
-
-        <FioDeLuas className="my-4 h-3 w-[10.5rem]" />
 
         <label className="block">
           <span className="etiqueta">Seu nome</span>
