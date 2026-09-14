@@ -1,4 +1,4 @@
-import { Chips } from "@/components/Chips";
+import { Estante } from "@/components/Estante";
 import { FaixaLoja } from "@/components/FaixaLoja";
 import { Hero } from "@/components/Hero";
 import { Numeros } from "@/components/Numeros";
@@ -11,8 +11,8 @@ import { linkGeral } from "@/lib/whatsapp";
 /* Categorias que são serviço, não peça de prateleira. */
 const SERVICOS = new Set(["atendimentos", "cursos"]);
 
-/* As prateleiras da home, nesta ordem. O resto fica para as pílulas e
-   para a estante. */
+/* As portas da loja na home, nesta ordem. As outras categorias moram na
+   estante (/catalogo) e no menu. */
 const NA_HOME = ["cristais", "incensos-e-oleos", "velas", "taro-e-oraculos", "imagens-e-gnomos", "altar-e-defumacao"];
 
 export default async function Home() {
@@ -35,13 +35,6 @@ export default async function Home() {
     .filter((p): p is NonNullable<typeof p> => Boolean(p));
   const placa = pecas.find((p) => p.slug.startsWith("gato-da-sorte"))?.imagens[0]?.url;
 
-  const prateleiras = NA_HOME.map((slug) => {
-    const categoria = categorias.find((c) => c.slug === slug);
-    if (!categoria) return null;
-    const dentro = pecas.filter((p) => p.categoria_slug === slug && !destaques.includes(p)).sort((a, b) => a.ordem - b.ordem);
-    return dentro.length ? { categoria, produtos: dentro } : null;
-  }).filter((t): t is NonNullable<typeof t> => Boolean(t));
-
   const loja = categorias.filter((c) => c.ativo && !SERVICOS.has(c.slug));
 
   return (
@@ -50,20 +43,10 @@ export default async function Home() {
       <Portas atendimentos={atendimentos} />
 
       <Prateleira titulo="Destaques da loja" href="/catalogo" produtos={destaques} categorias={categorias} prioridade />
-      <Chips categorias={loja} />
 
       <TrilhoRedondo titulo="Atendimentos" href="/catalogo/atendimentos" itens={atendimentos} />
 
-      {prateleiras.map((t) => (
-        <Prateleira
-          key={t.categoria.slug}
-          titulo={t.categoria.nome}
-          href={`/catalogo/${t.categoria.slug}`}
-          produtos={t.produtos}
-          categorias={categorias}
-          mostrarCategoria={false}
-        />
-      ))}
+      <Estante categorias={loja} produtos={pecas} ordem={NA_HOME} />
 
       <FaixaLoja endereco={config.endereco ?? ""} horario={config.horario ?? ""} linkWhats={whats} foto={placa} />
 
