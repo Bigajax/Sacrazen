@@ -25,6 +25,10 @@ export default async function Home() {
 
   /* a foto do hero é a mesa de tarô: a primeira estrela que é atendimento */
   const fotoHero = hero.find((h) => atendimentos.some((a) => a.slug === h.slug))?.url;
+  /* para o celular, a foto em pé da consulta (a Mãe Meli com o baralho, a
+     sexta do carrossel); se a ordem mudar na oficina, cai na mesma do desktop */
+  const consulta = atendimentos.find((a) => a.slug.startsWith("consulta-de-taro"));
+  const fotoHeroMobile = consulta?.imagens.find((i) => i.url.endsWith("-6.webp"))?.url ?? fotoHero;
   /* as estrelas que não são atendimento abrem a loja */
   const destaques = hero
     .map((h) => pecas.find((p) => p.slug === h.slug))
@@ -42,7 +46,7 @@ export default async function Home() {
 
   return (
     <>
-      <Hero foto={fotoHero} atendimentos={atendimentos} whatsapp={config.whatsapp} />
+      <Hero foto={fotoHero} fotoMobile={fotoHeroMobile} atendimentos={atendimentos} whatsapp={config.whatsapp} />
       <Portas atendimentos={atendimentos} />
 
       <Prateleira titulo="Destaques da loja" href="/catalogo" produtos={destaques} categorias={categorias} prioridade />

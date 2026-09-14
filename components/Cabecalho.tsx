@@ -33,10 +33,14 @@ export function Cabecalho({ categorias, linkWhats, avisoTopo = "" }: { categoria
   return (
     <header className="relative z-50 border-b border-fio bg-cartao">
       {/* os recados da loja, na noite, acima de tudo */}
-      {avisoTopo ? <AvisoRotativo avisos={avisoTopo.split("|")} /> : null}
+      {avisoTopo ? (
+        <div className="hidden lg:block">
+          <AvisoRotativo avisos={avisoTopo.split("|")} />
+        </div>
+      ) : null}
 
       <div className="mx-auto flex h-[4.5rem] max-w-[72rem] items-center justify-between gap-3 px-4 sm:px-6 lg:grid lg:h-[6.5rem] lg:grid-cols-[1fr_auto_1fr] lg:px-10">
-        <nav aria-label="Principal" className="order-2 flex items-center gap-4 lg:order-1 lg:gap-5">
+        <nav aria-label="Principal" className="order-1 flex items-center gap-4 lg:gap-5">
           <Link href="/catalogo" className="titulo-cartao hidden text-tinta hover:text-ametista sm:block">
             Catálogo
           </Link>
@@ -48,15 +52,23 @@ export function Cabecalho({ categorias, linkWhats, avisoTopo = "" }: { categoria
             onClick={() => setAberto((v) => !v)}
             aria-expanded={aberto}
             aria-controls="menu-categorias"
-            className="titulo-cartao flex items-center gap-1.5 text-tinta hover:text-ametista"
+            className="titulo-cartao flex flex-col items-center gap-1 text-tinta hover:text-ametista lg:flex-row lg:gap-1.5"
           >
-            Categorias
-            <span aria-hidden="true" className={`text-[0.625rem] transition-transform ${aberto ? "rotate-180" : ""}`}>▼</span>
+            <span aria-hidden="true" className="flex flex-col gap-[4px] lg:hidden">
+              <span className="block h-[2.5px] w-6 rounded bg-tinta" />
+              <span className="block h-[2.5px] w-6 rounded bg-tinta" />
+              <span className="block h-[2.5px] w-6 rounded bg-tinta" />
+            </span>
+            <span className="text-[0.625rem] lg:text-[0.8125rem]">
+              <span className="lg:hidden">Menu</span>
+              <span className="hidden lg:inline">Categorias</span>
+            </span>
+            <span aria-hidden="true" className={`hidden text-[0.625rem] transition-transform lg:inline ${aberto ? "rotate-180" : ""}`}>▼</span>
           </button>
         </nav>
 
-        <Link href="/" aria-label="SacraZen, página inicial" className="order-1 flex shrink-0 items-center lg:order-2">
-          <LogoOriginal className="h-[3.75rem] w-[3.75rem] lg:h-[5.5rem] lg:w-[5.5rem]" />
+        <Link href="/" aria-label="SacraZen, página inicial" className="order-2 flex shrink-0 items-center">
+          <LogoOriginal className="h-[3.5rem] w-[3.5rem] lg:h-[5.5rem] lg:w-[5.5rem]" />
         </Link>
 
         <div className="order-3 flex items-center justify-end gap-3">
@@ -69,11 +81,11 @@ export function Cabecalho({ categorias, linkWhats, avisoTopo = "" }: { categoria
               className="busca-linha w-[13rem]"
             />
           </form>
-          <a href={linkWhats} target="_blank" rel="noreferrer" className="titulo-cartao flex items-center gap-2 text-tinta hover:text-ametista">
-            <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true" focusable="false" fill="currentColor">
+          <a href={linkWhats} target="_blank" rel="noreferrer" className="titulo-cartao flex flex-col items-center gap-1 text-tinta hover:text-ametista lg:flex-row lg:gap-2">
+            <svg viewBox="0 0 24 24" className="h-6 w-6 lg:h-5 lg:w-5" aria-hidden="true" focusable="false" fill="currentColor">
               <path d="M12 2.2a9.8 9.8 0 0 0-8.4 14.8L2.2 21.8l4.9-1.3A9.8 9.8 0 1 0 12 2.2zm0 17.9c-1.5 0-3-.4-4.2-1.2l-.3-.2-2.9.8.8-2.8-.2-.3A8.1 8.1 0 1 1 12 20.1zm4.5-6c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.3-.4.3-.4.8-1.4.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.9 11.9 0 0 0 4.5 4c1.7.7 2.3.8 3.1.6a2.7 2.7 0 0 0 1.8-1.2c.2-.6.2-1.1.2-1.2-.1-.2-.3-.3-.5-.4z" />
             </svg>
-            WhatsApp
+            <span className="text-[0.625rem] lg:text-[0.8125rem]">WhatsApp</span>
           </a>
         </div>
       </div>
