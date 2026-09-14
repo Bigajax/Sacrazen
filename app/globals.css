@@ -288,6 +288,56 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+/* o campo com o rótulo sentado na borda, como no portal de referência:
+   o label é o pai, o span é o rótulo que sobe, o campo fica dentro */
+.campo-flutuante {
+  position: relative;
+  display: block;
+}
+.campo-flutuante > span {
+  position: absolute;
+  top: -0.5rem;
+  left: 0.75rem;
+  padding: 0 0.375rem;
+  background: var(--cartao);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--tinta-fraca);
+  line-height: 1;
+  pointer-events: none;
+}
+.campo-flutuante > input,
+.campo-flutuante > select {
+  width: 100%;
+  border: 1px solid var(--fio-forte);
+  border-radius: 8px;
+  background: var(--cartao);
+  padding: 0.9375rem 0.875rem 0.75rem;
+  font-family: var(--font-corpo);
+  font-size: 1rem;
+  color: var(--tinta);
+  transition: border-color var(--transicao);
+  appearance: none;
+}
+.campo-flutuante > select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%278%27%3E%3Cpath d=%27M1 1l5 5 5-5%27 fill=%27none%27 stroke=%27%231b2e5c%27 stroke-width=%271.8%27/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.875rem center;
+  padding-right: 2.25rem;
+  cursor: pointer;
+}
+.campo-flutuante > input::placeholder {
+  color: var(--cimento-escuro);
+}
+.campo-flutuante > input:focus,
+.campo-flutuante > select:focus {
+  outline: none;
+  border-color: var(--tinta);
+}
+.campo-flutuante:focus-within > span {
+  color: var(--tinta);
+}
+
 /* a busca: caixa branca com borda, como no portal */
 .busca-linha {
   border: 1px solid var(--fio-forte);
