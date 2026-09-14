@@ -1,0 +1,496 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────────────────
+   SACRAZEN — tokens.
+
+   A paleta é a da loja física, não de uma referência: a parede azul-
+   marinho, o teto pintado de céu noturno, as prateleiras de madeira
+   clara, a placa e o lustre de latão, a cera das velas. Nada fora disto.
+
+   Os nomes antigos da base (cimento, marrom, nude, off-white, tinta)
+   continuam existindo porque o painel administrativo é escrito neles.
+   Aqui eles viram um papel claro e neutro: o painel é da dona, não é
+   a vitrine, e não precisa da noite.
+   ───────────────────────────────────────────────────────────── */
+@theme static {
+  --color-noite: #0e1b36;
+  --color-noite-funda: #091226;
+  --color-parede: #1b2e5c;
+  --color-parede-clara: #27407a;
+  --color-madeira: #c9a46b;
+  --color-madeira-fraca: #8f7a55;
+  --color-latao: #e0b349;
+  --color-cera: #f3ebd8;
+  --color-cera-fraca: #b9b09a;
+  --color-ametista: #8b6bb1;
+  --color-brasa: #c0392b;
+
+  /* o painel, em papel */
+  --color-off-white: #faf7f1;
+  --color-cimento-claro: #f1ede4;
+  --color-cimento: #e6e1d5;
+  --color-cimento-medio: #cfc8b8;
+  --color-cimento-escuro: #8f8774;
+  --color-marrom: #6b5a3c;
+  --color-marrom-fundo: #4a3d27;
+  --color-nude: #e0b349;
+  --color-nude-claro: #f3e6c3;
+  --color-tinta: #1a1710;
+
+}
+
+:root {
+  --noite: #0e1b36;
+  --noite-funda: #091226;
+  --parede: #1b2e5c;
+  --parede-clara: #27407a;
+  --madeira: #c9a46b;
+  --madeira-fraca: #8f7a55;
+  --latao: #e0b349;
+  --cera: #f3ebd8;
+  --cera-fraca: #b9b09a;
+  --ametista: #8b6bb1;
+  --brasa: #c0392b;
+
+  --off-white: #faf7f1;
+  --cimento-claro: #f1ede4;
+  --cimento: #e6e1d5;
+  --cimento-medio: #cfc8b8;
+  --cimento-escuro: #8f8774;
+  --marrom: #6b5a3c;
+  --marrom-fundo: #4a3d27;
+  --nude: #e0b349;
+  --tinta: #1a1710;
+
+  /* a linha da casa: madeira a 40%, sempre 1px. Nunca 2px, nunca cheia. */
+  --fio: color-mix(in srgb, var(--madeira) 40%, transparent);
+  --fio-forte: color-mix(in srgb, var(--madeira) 70%, transparent);
+  --transicao: 200ms ease-out;
+  --moldura-fora: 10px;
+  --linha: var(--fio-forte);
+  --linha-peso: 1px;
+}
+
+html {
+  background-color: var(--noite);
+  color-scheme: dark;
+}
+
+/* As famílias moram no body, não no :root: as variáveis --fonte-* do
+   next/font entram pela classe do body, e um var() que aponta para uma
+   variável que não existe no :root invalida a declaração inteira (foi
+   assim que a Cormorant sumiu e a Segoe entrou no lugar). */
+body {
+  --font-display: var(--fonte-display), "Cormorant Garamond", Georgia, serif;
+  --font-corpo: var(--fonte-corpo), "Inter", system-ui, sans-serif;
+  --font-mono: var(--font-corpo);
+  color: var(--cera);
+  font-family: var(--font-corpo);
+  font-size: 1rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* O painel pinta o próprio chão: ver app/painel/layout.tsx */
+.papel {
+  background: var(--off-white);
+  color: var(--tinta);
+  color-scheme: light;
+}
+
+::selection {
+  background: var(--latao);
+  color: var(--noite);
+}
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--latao);
+  outline-offset: 3px;
+}
+.papel :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline-color: var(--tinta);
+}
+
+/* ── tipografia ─────────────────────────────────────────────── */
+/* O nome na placa de latão: caixa alta, entreletra aberta. É o único
+   lugar em que o site escreve em caixa alta. */
+.placa {
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  line-height: 1;
+}
+.display {
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.005em;
+}
+.display-secao {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.625rem, 2.6vw, 2.125rem);
+  line-height: 1.1;
+  letter-spacing: -0.005em;
+}
+.display-peca {
+  font-family: var(--font-corpo);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  line-height: 1.35;
+}
+.falada {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.25;
+}
+.preco {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-variant-numeric: lining-nums tabular-nums;
+  letter-spacing: 0.01em;
+}
+.mono {
+  font-family: var(--font-corpo);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.mono-rotulo {
+  font-family: var(--font-corpo);
+  font-weight: 500;
+  font-size: 0.8125rem;
+  letter-spacing: 0.01em;
+}
+.miudo {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--cera-fraca);
+}
+
+/* ── controles ──────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  font-family: var(--font-corpo);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  line-height: 1;
+  padding: 0.9375rem 1.5rem;
+  transition: background-color var(--transicao), color var(--transicao),
+    border-color var(--transicao);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+/* latão sobre a noite: o único botão cheio da página */
+.btn--primario {
+  background: var(--latao);
+  color: var(--noite-funda);
+}
+.btn--primario:hover:not(:disabled) {
+  background: var(--cera);
+}
+.btn--linha {
+  border: 1px solid var(--fio-forte);
+  color: var(--cera);
+}
+.btn--linha:hover:not(:disabled) {
+  border-color: var(--cera);
+}
+.btn--texto {
+  padding: 0.5rem 0;
+  border-radius: 0;
+  color: var(--madeira);
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  text-decoration-color: var(--fio);
+}
+.btn--texto:hover:not(:disabled) {
+  color: var(--cera);
+  text-decoration-color: var(--madeira);
+}
+/* no papel do painel os mesmos botões ficam em tinta */
+.papel .btn--primario {
+  background: var(--marrom-fundo);
+  color: var(--off-white);
+}
+.papel .btn--primario:hover:not(:disabled) {
+  background: var(--tinta);
+}
+.papel .btn--linha {
+  border-color: var(--marrom);
+  color: var(--marrom-fundo);
+}
+.papel .btn--linha:hover:not(:disabled) {
+  background: var(--marrom-fundo);
+  color: var(--off-white);
+}
+.papel .btn--texto {
+  color: var(--marrom-fundo);
+}
+
+.campo {
+  width: 100%;
+  border: 1px solid var(--cimento-medio);
+  border-radius: 6px;
+  background: var(--off-white);
+  padding: 0.6875rem 0.875rem;
+  font-family: var(--font-corpo);
+  font-size: 0.9375rem;
+  color: var(--tinta);
+  transition: border-color var(--transicao);
+}
+.campo:hover {
+  border-color: var(--cimento-escuro);
+}
+.campo:focus {
+  outline: none;
+  border-color: var(--marrom-fundo);
+}
+.campo::placeholder {
+  color: var(--cimento-escuro);
+}
+.campo--auto {
+  width: auto;
+}
+.campo--mono {
+  font-variant-numeric: tabular-nums;
+}
+
+/* busca: uma linha na madeira, não uma caixa */
+.busca-linha {
+  border: 0;
+  border-bottom: 1px solid var(--fio-forte);
+  background: transparent;
+  padding: 0.5rem 0.125rem;
+  font-family: var(--font-corpo);
+  font-size: 0.9375rem;
+  color: var(--cera);
+  transition: border-color var(--transicao);
+}
+.busca-linha::placeholder {
+  color: var(--cera-fraca);
+}
+.busca-linha:hover {
+  border-color: var(--madeira);
+}
+.busca-linha:focus,
+.busca-linha:focus-visible {
+  outline: none;
+  border-color: var(--cera);
+}
+.busca-linha option {
+  color: var(--tinta);
+  background: var(--off-white);
+}
+.papel .busca-linha {
+  color: var(--tinta);
+  border-color: var(--marrom);
+}
+
+/* chip de filtro: pílula de linha; a escolhida acende em latão */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border: 1px solid var(--fio);
+  border-radius: 999px;
+  padding: 0.4375rem 0.875rem;
+  font-family: var(--font-corpo);
+  font-size: 0.8125rem;
+  color: var(--cera);
+  background: transparent;
+  transition: border-color var(--transicao), color var(--transicao);
+  cursor: pointer;
+}
+.chip:hover {
+  border-color: var(--madeira);
+}
+.chip[aria-pressed="true"],
+.chip[data-ativo="true"] {
+  border-color: var(--latao);
+  color: var(--latao);
+}
+.papel .chip {
+  color: var(--tinta);
+  border-color: var(--cimento-medio);
+}
+.papel .chip[aria-pressed="true"],
+.papel .chip[data-ativo="true"] {
+  border-color: var(--marrom);
+  color: var(--marrom-fundo);
+  box-shadow: inset 0 0 0 1px var(--marrom);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   A régua de seção: o título, e o fio que sai dele até a margem.
+   ───────────────────────────────────────────────────────────── */
+.regua {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+.regua::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--fio);
+  transform: translateY(-0.35em);
+}
+
+/* moldura simples do painel (herdada da base): um contorno que aparece
+   no hover ou no estado ativo, sem legenda */
+.moldura {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 1px solid var(--linha);
+  border-radius: 8px;
+}
+.tem-moldura {
+  position: relative;
+}
+.tem-moldura > .moldura {
+  opacity: 0;
+  transition: opacity var(--transicao);
+}
+.tem-moldura:hover > .moldura,
+.tem-moldura:focus-within > .moldura,
+.tem-moldura[data-ativa="true"] > .moldura {
+  opacity: 1;
+}
+.papel .moldura {
+  border-color: var(--marrom);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   O teto. O céu pintado da loja, em código: um campo de estrelas
+   fixas (sem cintilar) e o anel das fases da lua em fio de latão.
+   ───────────────────────────────────────────────────────────── */
+.ceu {
+  background-image:
+    radial-gradient(ellipse 70% 55% at 50% 0%, rgba(39, 64, 122, 0.55), transparent 70%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cg fill='%23f3ebd8'%3E%3Ccircle cx='23' cy='41' r='.8' opacity='.7'/%3E%3Ccircle cx='97' cy='12' r='1.1' opacity='.55'/%3E%3Ccircle cx='151' cy='88' r='.7' opacity='.8'/%3E%3Ccircle cx='210' cy='31' r='.9' opacity='.5'/%3E%3Ccircle cx='266' cy='120' r='.6' opacity='.7'/%3E%3Ccircle cx='330' cy='58' r='1' opacity='.6'/%3E%3Ccircle cx='389' cy='140' r='.7' opacity='.5'/%3E%3Ccircle cx='47' cy='176' r='.6' opacity='.6'/%3E%3Ccircle cx='128' cy='223' r='1' opacity='.45'/%3E%3Ccircle cx='302' cy='205' r='.8' opacity='.7'/%3E%3Ccircle cx='372' cy='262' r='.6' opacity='.6'/%3E%3Ccircle cx='72' cy='301' r='.9' opacity='.5'/%3E%3Ccircle cx='191' cy='334' r='.7' opacity='.75'/%3E%3Ccircle cx='247' cy='389' r='1.1' opacity='.45'/%3E%3Ccircle cx='340' cy='356' r='.6' opacity='.7'/%3E%3Ccircle cx='15' cy='398' r='.8' opacity='.55'/%3E%3Ccircle cx='406' cy='22' r='.7' opacity='.65'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: no-repeat, repeat;
+  background-size: 100% 100%, 420px 420px;
+}
+
+/* as fases acendem uma a uma, uma vez, na chegada */
+@keyframes acender {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.fase {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: acender 520ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(var(--i) * 110ms + 120ms);
+}
+
+/* ── trilhos horizontais ────────────────────────────────────── */
+.faixa-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-snap-type: x proximity;
+  /* o snap alinha a peça com a borda do scrollport e ignora o padding:
+     sem isto a primeira peça encosta na margem da tela */
+  scroll-padding-inline: 1rem;
+}
+@media (min-width: 640px) {
+  .faixa-scroll {
+    scroll-padding-inline: 1.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .faixa-scroll {
+    scroll-padding-inline: 2.5rem;
+  }
+}
+.faixa-scroll::-webkit-scrollbar {
+  display: none;
+}
+.faixa-scroll > * {
+  scroll-snap-align: start;
+}
+
+/* ── a foto, do jeito que veio ──────────────────────────────── */
+/* As fotos são do produto na mão, com o fundo do dia a dia. A moldura
+   é um vinhete suave da própria noite, para a borda da foto não bater
+   contra o azul. Nenhum recorte, nenhum fundo branco forçado. */
+.foto {
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--parede);
+}
+.foto::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 0 0 1px rgba(201, 164, 107, 0.18),
+    inset 0 -40px 60px -30px rgba(9, 18, 38, 0.55);
+}
+
+/* ── letreiro rotativo do topo (herdado da base) ────────────── */
+.marquee-janela {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+.marquee {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  animation: desliza 46s linear infinite;
+}
+.marquee--rapida {
+  animation-duration: 38s;
+}
+.marquee-janela:hover .marquee {
+  animation-play-state: paused;
+}
+@keyframes desliza {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ── movimento ──────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .fase {
+    animation: none;
+  }
+  .marquee {
+    animation: none !important;
+    transform: none !important;
+  }
+  .marquee-janela {
+    overflow-x: auto;
+  }
+}

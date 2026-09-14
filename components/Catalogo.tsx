@@ -1,0 +1,386 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { CardProduto } from "./CardProduto";
+import {
+  faixaDePreco,
+  filtrar,
+  marcasDisponiveis,
+  tamanhosDisponiveis,
+} from "@/lib/filtro";
+import { paraNumero, precoBRL } from "@/lib/formato";
+import type { Categoria, Ordenacao, Produto } from "@/lib/tipos";
+
+const POR_PAGINA = 12;
+
+const ORDENS: { valor: Ordenacao; rotulo: string }[] = [
+  { valor: "recentes", rotulo: "Recentes" },
+  { valor: "menor-preco", rotulo: "Menor preço" },
+  { valor: "maior-preco", rotulo: "Maior preço" },
+];
+
+export function Catalogo({
+  produtos,
+  categorias,
+  categoriaAtual,
+  buscaInicial = "",
+  linkWhats,
+}: {
+  produtos: Produto[];
+  categorias: Categoria[];
+  categoriaAtual?: string;
+  buscaInicial?: string;
+  linkWhats: string;
+}) {
+  const [busca, setBusca] = useState(buscaInicial);
+  const [marcas, setMarcas] = useState<string[]>([]);
+  const [tamanhos, setTamanhos] = useState<string[]>([]);
+  const [precoMin, setPrecoMin] = useState("");
+  const [precoMax, setPrecoMax] = useState("");
+  const [ordem, setOrdem] = useState<Ordenacao>("recentes");
+  const [visiveis, setVisiveis] = useState(POR_PAGINA);
+  const [filtrosAbertos, setFiltrosAbertos] = useState(false);
+
+  const doEscopo = useMemo(
+    () =>
+      categoriaAtual
+        ? produtos.filter((p) => p.categoria_slug === categoriaAtual)
+        : produtos,
+    [produtos, categoriaAtual],
+  );
+
+  const opcoesMarca = useMemo(() => marcasDisponiveis(doEscopo), [doEscopo]);
+  const opcoesTamanho = useMemo(() => tamanhosDisponiveis(doEscopo), [doEscopo]);
+  const faixa = useMemo(() => faixaDePreco(doEscopo), [doEscopo]);
+
+  const lista = useMemo(
+    () =>
+      filtrar(doEscopo, {
+        busca,
+        marca: marcas,
+        tamanho: tamanhos,
+        precoMin: paraNumero(precoMin) ?? undefined,
+        precoMax: paraNumero(precoMax) ?? undefined,
+        ordem,
+      }),
+    [doEscopo, busca, marcas, tamanhos, precoMin, precoMax, ordem],
+  );
+
+  useEffect(() => setVisiveis(POR_PAGINA), [busca, marcas, tamanhos, ordem, precoMin, precoMax]);
+
+  const temFiltro =
+    Boolean(busca) ||
+    marcas.length > 0 ||
+    tamanhos.length > 0 ||
+    Boolean(precoMin) ||
+    Boolean(precoMax);
+
+  function limpar() {
+    setBusca("");
+    setMarcas([]);
+    setTamanhos([]);
+    setPrecoMin("");
+    setPrecoMax("");
+  }
+
+  const alterna = (
+    valor: string,
+    atual: string[],
+    definir: (v: string[]) => void,
+  ) =>
+    definir(
+      atual.includes(valor) ? atual.filter((v) => v !== valor) : [...atual, valor],
+    );
+
+  const painelFiltros = (
+    <div className="space-y-9">
+      <Grupo titulo="Categoria">
+        <ul>
+          <LinhaCategoria
+            href="/catalogo"
+            nome="Tudo"
+            quantidade={produtos.length}
+            ativa={!categoriaAtual}
+          />
+          {categorias.map((c) => (
+            <LinhaCategoria
+              key={c.slug}
+              href={`/catalogo/${c.slug}`}
+              nome={c.nome}
+              quantidade={produtos.filter((p) => p.categoria_slug === c.slug).length}
+              ativa={categoriaAtual === c.slug}
+            />
+          ))}
+        </ul>
+      </Grupo>
+
+      {opcoesMarca.length > 1 ? (
+        <Grupo titulo="Marca">
+          <div className="flex flex-wrap gap-2">
+            {opcoesMarca.map((m) => (
+              <button
+                key={m}
+                type="button"
+                className="chip"
+                aria-pressed={marcas.includes(m)}
+                onClick={() => alterna(m, marcas, setMarcas)}
+              >
+                {m}
+              </button>
+            ))}
+          </div>
+        </Grupo>
+      ) : null}
+
+      {opcoesTamanho.length ? (
+        <Grupo titulo="Tamanho">
+          <div className="flex flex-wrap gap-2">
+            {opcoesTamanho.map((t) => (
+              <button
+                key={t}
+                type="button"
+                className="chip"
+                aria-pressed={tamanhos.includes(t)}
+                onClick={() => alterna(t, tamanhos, setTamanhos)}
+              >
+                {t}
+              </button>
+            ))}
+          </div>
+        </Grupo>
+      ) : null}
+
+      {faixa ? (
+        <Grupo titulo={`Preço · ${precoBRL(faixa[0])} a ${precoBRL(faixa[1])}`}>
+          <div className="flex items-center gap-3">
+            <label className="sr-only" htmlFor="preco-min">
+              Preço mínimo
+            </label>
+            <input
+              id="preco-min"
+              inputMode="numeric"
+              value={precoMin}
+              onChange={(e) => setPrecoMin(e.target.value)}
+              placeholder="de"
+              className="campo campo--mono py-2 text-xs"
+            />
+            <span className="miudo">a</span>
+            <label className="sr-only" htmlFor="preco-max">
+              Preço máximo
+            </label>
+            <input
+              id="preco-max"
+              inputMode="numeric"
+              value={precoMax}
+              onChange={(e) => setPrecoMax(e.target.value)}
+              placeholder="até"
+              className="campo campo--mono py-2 text-xs"
+            />
+          </div>
+        </Grupo>
+      ) : null}
+
+      {temFiltro ? (
+        <button type="button" onClick={limpar} className="btn btn--texto">
+          Limpar filtros
+        </button>
+      ) : null}
+    </div>
+  );
+
+  return (
+    <div className="mx-auto max-w-[72rem] px-4 pb-20 sm:px-6 lg:px-10">
+      {/* barra de comando: campos de linha, sem caixa, entre dois fios */}
+      <div className="flex flex-col gap-5 border-y border-[color:var(--fio)] py-5 sm:flex-row sm:items-center sm:gap-10">
+        <div className="flex min-w-0 flex-1 items-center gap-4">
+          <label
+            htmlFor="busca-catalogo"
+            className="mono-rotulo hidden shrink-0 text-madeira sm:block"
+          >
+            Buscar
+          </label>
+          <input
+            id="busca-catalogo"
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+            placeholder="Nome ou marca"
+            aria-label="Buscar por nome ou marca"
+            className="busca-linha min-w-0 flex-1 sm:max-w-xs"
+          />
+        </div>
+
+        <div className="flex items-center gap-6">
+          <p className="mono shrink-0 text-[0.8125rem] text-cera-fraca">
+            <span className="preco text-[1.25rem] text-cera">{lista.length}</span>{" "}
+            {lista.length === 1 ? "peça" : "peças"}
+          </p>
+
+          <div className="flex items-center gap-3">
+            <label
+              htmlFor="ordem"
+              className="mono-rotulo hidden shrink-0 text-madeira md:block"
+            >
+              Ordem
+            </label>
+            <select
+              id="ordem"
+              aria-label="Ordenar as peças"
+              value={ordem}
+              onChange={(e) => setOrdem(e.target.value as Ordenacao)}
+              className="busca-linha campo--auto cursor-pointer pr-1"
+            >
+              {ORDENS.map((o) => (
+                <option key={o.valor} value={o.valor}>
+                  {o.rotulo}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <span className="ml-auto lg:hidden">
+            <button
+              type="button"
+              onClick={() => setFiltrosAbertos(true)}
+              className="btn btn--linha px-4 py-2.5"
+            >
+              Filtrar
+            </button>
+          </span>
+        </div>
+      </div>
+
+      <div className="grid gap-10 pt-10 lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-14">
+        <aside className="hidden lg:block">{painelFiltros}</aside>
+
+        <div>
+          {lista.length ? (
+            <>
+              <div className="grid grid-cols-2 gap-x-5 gap-y-12 sm:grid-cols-3 sm:gap-x-8 lg:grid-cols-4 lg:gap-x-10 lg:gap-y-16">
+                {lista.slice(0, visiveis).map((p, i) => (
+                  <CardProduto key={p.id} produto={p} prioridade={i < 4} />
+                ))}
+              </div>
+              {visiveis < lista.length ? (
+                <div className="mt-16 flex justify-center">
+                  <button
+                    type="button"
+                    onClick={() => setVisiveis((v) => v + POR_PAGINA)}
+                    className="btn btn--linha"
+                  >
+                    Carregar mais ({lista.length - visiveis})
+                  </button>
+                </div>
+              ) : null}
+            </>
+          ) : (
+            <div className="mx-auto max-w-md rounded-lg border border-[color:var(--fio)] p-10 text-center">
+              <p className="display text-[1.375rem] text-cera">
+                Nenhuma peça com esses filtros
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-cera">
+                Limpe os filtros ou pergunte no WhatsApp: a loja tem mais do que a vitrine mostra.
+              </p>
+              <div className="mt-7 flex flex-wrap justify-center gap-3">
+                <button type="button" onClick={limpar} className="btn btn--linha">
+                  Limpar filtros
+                </button>
+                <a
+                  href={linkWhats}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn btn--primario"
+                >
+                  Chamar no WhatsApp
+                </a>
+              </div>
+                          </div>
+          )}
+        </div>
+      </div>
+
+      {filtrosAbertos ? (
+        <div
+          className="fixed inset-0 z-50 bg-noite-funda/80 lg:hidden"
+          onClick={() => setFiltrosAbertos(false)}
+        >
+          <div
+            className="ml-auto flex h-full w-[min(22rem,90vw)] flex-col overflow-y-auto bg-parede p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-8 flex items-center justify-between">
+              <span className="mono-rotulo text-madeira">Filtros</span>
+              <button
+                type="button"
+                onClick={() => setFiltrosAbertos(false)}
+                className="mono-rotulo text-madeira"
+              >
+                Fechar
+              </button>
+            </div>
+            {painelFiltros}
+            <button
+              type="button"
+              onClick={() => setFiltrosAbertos(false)}
+              className="btn btn--primario mt-10"
+            >
+              Ver {lista.length} {lista.length === 1 ? "peça" : "peças"}
+            </button>
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function Grupo({
+  titulo,
+  children,
+}: {
+  titulo: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section>
+      <h3 className="miudo mb-3">
+        {titulo}
+      </h3>
+      {children}
+    </section>
+  );
+}
+
+/** Mesma leitura do índice da home: nome, fio e contagem. */
+function LinhaCategoria({
+  href,
+  nome,
+  quantidade,
+  ativa,
+}: {
+  href: string;
+  nome: string;
+  quantidade: number;
+  ativa: boolean;
+}) {
+  return (
+    <li>
+      <Link
+        href={href}
+        aria-current={ativa ? "page" : undefined}
+        data-ativo={ativa}
+        className="group flex items-center gap-3 border-b border-[color:var(--fio)] py-2.5 transition-colors hover:border-madeira"
+      >
+        <span
+          className={`min-w-0 flex-1 truncate text-[0.9375rem] transition-transform duration-[220ms] ease-out group-hover:translate-x-1 ${
+            ativa ? "text-latao" : "text-cera"
+          }`}
+        >
+          {nome}
+        </span>
+        <span className="preco shrink-0 text-[0.9375rem] text-madeira">
+          {quantidade}
+        </span>
+      </Link>
+    </li>
+  );
+}
