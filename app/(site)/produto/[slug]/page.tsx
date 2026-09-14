@@ -10,6 +10,8 @@ import { temDesconto } from "@/lib/filtro";
 import { precoBRL } from "@/lib/formato";
 import { site } from "@/data/site.config";
 import { ehServico } from "@/lib/servicos";
+import { vozDe } from "@/lib/vozes";
+import { FioDeLuas } from "@/components/Teto";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -60,6 +62,14 @@ export default async function PaginaProduto({ params }: Props) {
     .filter((p) => p.ativo && p.id !== produto.id && p.categoria_slug === produto.categoria_slug)
     .slice(0, 4);
 
+  /* a voz da prateleira e o "leva junto": a categoria par desta, com
+     preço, para a peça não sair sozinha */
+  const voz = atendimento ? null : vozDe(produto);
+  const par = voz ? categorias.find((c) => c.slug === voz.par) : null;
+  const levaJunto = par
+    ? produtos.filter((p) => p.ativo && p.categoria_slug === par.slug && p.preco !== null).sort((a, b) => a.ordem - b.ordem).slice(0, 4)
+    : [];
+
   const preco = produto.preco_promocional ?? produto.preco;
   const jsonLd = {
     "@context": "https://schema.org",
@@ -102,10 +112,12 @@ export default async function PaginaProduto({ params }: Props) {
           <GaleriaProduto imagens={produto.imagens} nome={produto.nome} />
 
           <div className="lg:pt-2">
-            <h1 className="manchete text-[clamp(1.5rem,3vw,2.125rem)] text-tinta">{produto.nome}</h1>
-            {categoria ? <p className="etiqueta mt-2">{categoria.nome}</p> : null}
+            {categoria ? <p className="etiqueta">{categoria.nome}</p> : null}
+            <h1 className="manchete mt-2 text-[clamp(1.5rem,3vw,2.125rem)] text-tinta">{produto.nome}</h1>
+            {voz ? <p className="falada mt-3 max-w-[40ch] text-[1.0625rem] text-tinta-fraca">{voz.frase}</p> : null}
+            <FioDeLuas className="mt-4 h-3 w-[10.5rem]" />
 
-            <div className="mt-6 border-y border-fio py-5">
+            <div className="mt-5 border-b border-fio pb-5">
               {vigente ? (
                 <p className="preco flex items-baseline gap-3 text-[1.75rem] text-tinta">
                   {promo && cheio ? <span className="text-[1.125rem] text-tinta-fraca line-through">{cheio}</span> : null}
@@ -123,18 +135,8 @@ export default async function PaginaProduto({ params }: Props) {
             {produto.descricao ? (
               <p className="mt-6 max-w-[52ch] text-[0.9375rem] leading-relaxed text-tinta">{produto.descricao}</p>
             ) : null}
-            {!atendimento ? (
+            {!atendimento && (produto.marca || produto.cores.length === 1 || produto.tamanhos.length) ? (
               <dl className="mt-5 grid grid-cols-[auto_minmax(0,1fr)] gap-x-6 gap-y-1.5 text-[0.9375rem]">
-                {categoria ? (
-                  <>
-                    <dt className="text-tinta-fraca">Categoria</dt>
-                    <dd className="text-tinta">
-                      <Link href={`/catalogo/${categoria.slug}`} className="hover:text-ametista">
-                        {categoria.nome}
-                      </Link>
-                    </dd>
-                  </>
-                ) : null}
                 {produto.marca ? (
                   <>
                     <dt className="text-tinta-fraca">Marca</dt>
@@ -162,8 +164,27 @@ export default async function PaginaProduto({ params }: Props) {
           </div>
         </div>
 
+        {levaJunto.length && par ? (
+          <section aria-labelledby="titulo-leva-junto" className="mt-16 lg:mt-20">
+            <div className="regua">
+              <h2 id="titulo-leva-junto" className="secao text-tinta">
+                Leva junto
+              </h2>
+              <Link href={`/catalogo/${par.slug}`} className="text-[0.9375rem] font-medium text-ametista hover:underline">
+                {par.nome}
+              </Link>
+            </div>
+            <p className="falada mt-3 text-[1rem] text-tinta-fraca">{voz?.rotuloDoPar}.</p>
+            <div className="mt-5 grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-5">
+              {levaJunto.map((p) => (
+                <CardProduto key={p.id} produto={p} categoria={par} />
+              ))}
+            </div>
+          </section>
+        ) : null}
+
         {parecidos.length ? (
-          <section aria-labelledby="titulo-parecidos" className="mt-20 lg:mt-28">
+          <section aria-labelledby="titulo-parecidos" className="mt-16 lg:mt-20">
             <Regua id="titulo-parecidos">
               {atendimento ? "Outros atendimentos" : `Mais em ${categoria?.nome ?? "a loja"}`}
             </Regua>
