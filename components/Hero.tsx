@@ -29,18 +29,16 @@ export function Hero({ foto, atendimentos, whatsapp }: { foto?: string; atendime
           {/* três verbos, as três portas da loja: a mesa, o altar, a prateleira.
               A última linha é a placa de latão da entrada. */}
           <h1 className="manchete mt-4 text-[clamp(1.875rem,4.6vw,3.25rem)] text-white">
-            Pergunta pro tarô.
+            Traz a pergunta.
             <br />
-            Acende a vela.
-            <br />
-            Leva o cristal.
+            A mesa responde.
           </h1>
           <p className="mt-4 inline-block rounded-md border-2 border-latao px-3 py-1.5 text-[clamp(1rem,2vw,1.375rem)] font-bold text-latao">
             A loja esotérica de Uberaba
           </p>
 
           <p className="falada mt-6 max-w-[44ch] text-[1.0625rem] text-cera/85">
-            Dois pais de santo lendo juntos. E a prateleira com o que a mesa pediu: incenso, vela, imagem, cristal.
+            Dois pais de santo lendo juntos, e a prateleira ao lado com o que a leitura pedir: incenso, vela, imagem, cristal.
           </p>
 
           <p className="mt-5 flex items-center gap-2 text-[0.8125rem] text-cera-fraca">
