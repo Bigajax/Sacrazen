@@ -67,7 +67,7 @@ export function CompraProduto({
 
       <p className="miudo">
         {atendimento
-          ? "A Mãe Meli ou o Pai Gustavo combinam dia, horário e valor na conversa."
+          ? "A Mãe Meli e o Pai Gustavo combinam dia, horário e valor na conversa."
           : "A loja confirma se ainda tem, e combina retirada ou envio na conversa."}
       </p>
     </div>

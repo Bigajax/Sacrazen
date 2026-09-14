@@ -87,7 +87,7 @@ export function FormAgenda({ opcoes, whatsapp }: { opcoes: Produto[]; whatsapp: 
 
         <label className="block">
           <span className="etiqueta">Seu nome</span>
-          <input value={nome} onChange={(e) => setNome(e.target.value)} className="campo mt-1" placeholder="Como a Mãe Meli deve te chamar" />
+          <input value={nome} onChange={(e) => setNome(e.target.value)} className="campo mt-1" placeholder="Como a gente deve te chamar" />
         </label>
 
         <fieldset className="mt-4">
