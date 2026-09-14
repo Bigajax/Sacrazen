@@ -39,7 +39,7 @@ export function Cabecalho({ categorias, linkWhats, avisoTopo = "" }: { categoria
         </div>
       ) : null}
 
-      <div className="relative z-50 mx-auto flex h-[5rem] max-w-[72rem] items-center justify-between gap-3 bg-cartao px-4 sm:px-6 lg:grid lg:h-[6.5rem] lg:grid-cols-[1fr_auto_1fr] lg:px-10">
+      <div className="relative z-50 mx-auto flex h-[5.75rem] max-w-[72rem] items-center justify-between gap-3 bg-cartao px-4 sm:px-6 lg:grid lg:h-[7.5rem] lg:grid-cols-[1fr_auto_1fr] lg:px-10">
         <nav aria-label="Principal" className="order-1 flex items-center gap-4 lg:gap-5">
           <Link href="/catalogo" className="titulo-cartao hidden text-tinta hover:text-ametista sm:block">
             Catálogo
@@ -68,7 +68,7 @@ export function Cabecalho({ categorias, linkWhats, avisoTopo = "" }: { categoria
         </nav>
 
         <Link href="/" aria-label="SacraZen, página inicial" className="order-2 flex shrink-0 items-center">
-          <LogoOriginal className="h-[4.25rem] w-[4.25rem] lg:h-[5.5rem] lg:w-[5.5rem]" />
+          <LogoOriginal className="h-[5rem] w-[5rem] lg:h-[6.5rem] lg:w-[6.5rem]" />
         </Link>
 
         <div className="order-3 flex items-center justify-end gap-3">
