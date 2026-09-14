@@ -12,6 +12,8 @@ const PARTES = {
   buda: { arquivo: "/marca/buda.png", proporcao: 176 / 170 },
   letreiro: { arquivo: "/marca/letreiro.png", proporcao: 274 / 78 },
   completa: { arquivo: "/marca/sacrazen.png", proporcao: 1 },
+  /* a assinatura do estúdio, no rodapé */
+  estudio: { arquivo: "/marca/rafael-razeira.png", proporcao: 793 / 467 },
 } as const;
 
 export function Marca({
