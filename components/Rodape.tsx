@@ -1,4 +1,4 @@
-import { Marca } from "./Marca";
+import { LogoOriginal, Marca } from "./Marca";
 import { FioDeLuas } from "./Teto";
 import { PREVIA, site } from "@/data/site.config";
 
@@ -13,8 +13,9 @@ export function Rodape({ linkWhats, instagram }: { linkWhats: string; instagram:
       <div className="mx-auto max-w-[72rem] px-4 py-12 sm:px-6 lg:px-10 lg:py-14">
         <div className="flex flex-col items-center gap-6 text-center lg:flex-row lg:items-center lg:justify-between lg:text-left">
           <div className="flex flex-col items-center gap-3 lg:flex-row lg:gap-4">
-            <span className="text-cera">
-              <Marca parte="buda" altura={56} />
+            {/* a logo como ela é, num disco de cera: em máscara o Buda vira um borrão */}
+            <span className="flex h-[4.5rem] w-[4.5rem] items-center justify-center overflow-hidden rounded-full bg-cera">
+              <LogoOriginal className="h-[4.5rem] w-[4.5rem]" />
             </span>
             <div>
               <p className="placa text-[1.125rem] text-cera">SacraZen</p>
@@ -54,7 +55,7 @@ export function Rodape({ linkWhats, instagram }: { linkWhats: string; instagram:
             className="flex items-center gap-3 text-cera/60 transition-colors hover:text-cera"
           >
             <span className="text-[0.75rem]">vitrine por</span>
-            <Marca parte="estudio" altura={38} rotulo="Rafael Razeira Estúdio" />
+            <Marca parte="estudio" altura={40} rotulo="Rafael Razeira Estúdio" />
           </a>
         </div>
       </div>

@@ -13,7 +13,7 @@ const PARTES = {
   letreiro: { arquivo: "/marca/letreiro.png", proporcao: 274 / 78 },
   completa: { arquivo: "/marca/sacrazen.png", proporcao: 1 },
   /* a assinatura do estúdio, no rodapé */
-  estudio: { arquivo: "/marca/rafael-razeira.png", proporcao: 793 / 467 },
+  estudio: { arquivo: "/marca/rafael-razeira.png", proporcao: 956 / 519 },
 } as const;
 
 export function Marca({
