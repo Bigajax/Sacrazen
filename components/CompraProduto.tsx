@@ -61,7 +61,7 @@ export function CompraProduto({
         </fieldset>
       ) : null}
 
-      <a href={link} target="_blank" rel="noreferrer" className="btn btn--latao w-full py-4">
+      <a href={link} target="_blank" rel="noreferrer" className="btn btn--cta w-full">
         Chamar no WhatsApp
       </a>
 

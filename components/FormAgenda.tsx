@@ -92,7 +92,7 @@ export function FormAgenda({ opcoes, whatsapp }: { opcoes: Produto[]; whatsapp: 
           <Seletor rotulo="Sobre o que você quer falar" valor={assunto} opcoes={ASSUNTOS} aoEscolher={setAssunto} />
         </div>
 
-        <button type="submit" className="btn btn--latao mt-5 w-full py-4 text-[0.9375rem]">
+        <button type="submit" className="btn btn--cta mt-5 w-full">
           {texto.botao}
         </button>
         <p className="miudo mt-3">Dia, horário e valor se combinam na conversa, pelo WhatsApp.</p>
