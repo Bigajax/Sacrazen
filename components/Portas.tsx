@@ -25,7 +25,7 @@ function fraseDe(p: Produto) {
 
 /* Os desenhos: a carta, a fumaça, a roda do mapa. Fio de latão sobre
    a noite, todos no mesmo círculo de 56px. */
-function Desenho({ slug }: { slug: string }) {
+export function Desenho({ slug, className = "h-16 w-16 shrink-0 rounded-full bg-noite p-2" }: { slug: string; className?: string }) {
   const comum = { fill: "none", stroke: "var(--latao)", strokeWidth: 1.4, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
   let forma: React.ReactNode;
   if (slug.startsWith("limpeza") || slug.startsWith("escalda")) {
@@ -56,7 +56,7 @@ function Desenho({ slug }: { slug: string }) {
     );
   }
   return (
-    <svg viewBox="0 0 32 32" className="h-16 w-16 shrink-0 rounded-full bg-noite p-2" aria-hidden="true" focusable="false">
+    <svg viewBox="0 0 32 32" className={className} aria-hidden="true" focusable="false">
       {forma}
     </svg>
   );

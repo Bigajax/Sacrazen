@@ -32,7 +32,7 @@ export function Hero({ foto, fotoMobile, atendimentos, whatsapp }: { foto?: stri
 
       <Teto className="pointer-events-none absolute left-1/2 top-3 h-16 w-[26rem] max-w-[90vw] -translate-x-1/2 opacity-70 lg:h-20 lg:w-[34rem]" />
 
-      <div className="relative mx-auto grid max-w-[72rem] gap-6 px-4 pb-24 pt-16 sm:px-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-16 lg:px-10 lg:pb-28 lg:pt-28">
+      <div className="relative mx-auto grid max-w-[72rem] gap-6 px-4 pb-24 pt-28 sm:px-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-16 lg:px-10 lg:pb-28 lg:pt-28">
         <div className="text-center lg:text-left">
           <p className="etiqueta hidden text-latao lg:block">Mãe Meli e Pai Gustavo, desde {site.desde}</p>
 
