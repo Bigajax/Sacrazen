@@ -79,13 +79,10 @@ export function Portas({ atendimentos }: { atendimentos: Produto[] }) {
           </Link>
         ))}
 
-        {/* a placa de seta, como as da entrada */}
+        {/* o mesmo botão do cartão: ametista cheia, texto branco */}
         <div className="flex items-center justify-center p-4 md:pl-6 md:pr-5">
-          <Link
-            href="/catalogo/atendimentos"
-            className="titulo-cartao relative flex items-center bg-latao py-3 pl-4 pr-8 text-noite transition-colors hover:bg-[#ecc35e] [clip-path:polygon(0_0,calc(100%-14px)_0,100%_50%,calc(100%-14px)_100%,0_100%)]"
-          >
-            Todos os atendimentos
+          <Link href="/catalogo/atendimentos" className="btn btn--cta w-full md:w-auto">
+            Ver todos os atendimentos
           </Link>
         </div>
       </div>
