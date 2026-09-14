@@ -478,6 +478,13 @@ body {
 .chip--cheio:hover {
   background: var(--noite);
 }
+/* a pílula quadrada da navegação: retângulo de cantos curtos, um pouco
+   mais alta, como as tags do portal */
+.chip--quadrado {
+  border-radius: 6px;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+}
 
 /* ── régua e moldura herdadas ───────────────────────────────── */
 .regua {
