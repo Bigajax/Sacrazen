@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Marca } from "./Marca";
 import { Desenho } from "./Portas";
 import { FioDeLuas } from "./Teto";
 import { linkWhatsApp } from "@/lib/whatsapp";
@@ -84,14 +83,7 @@ export function FormAgenda({ opcoes, whatsapp }: { opcoes: Produto[]; whatsapp: 
               {aba === 0 ? "Você não precisa chegar com a pergunta pronta. A mesa ajuda a achar." : "Para tirar o peso, abrir caminho e voltar a dormir."}
         </p>
 
-        {/* o fio de luas à esquerda e o Buda da placa à direita, na mesma
-            linha: o título e a frase ficam com a largura inteira */}
-        <div className="my-4 flex items-center justify-between">
-          <FioDeLuas className="h-3 w-[10.5rem]" />
-          <span className="text-tinta opacity-70" aria-hidden="true">
-            <Marca parte="buda" altura={34} />
-          </span>
-        </div>
+        <FioDeLuas className="my-4 h-3 w-[10.5rem]" />
 
         <label className="block">
           <span className="etiqueta">Seu nome</span>
