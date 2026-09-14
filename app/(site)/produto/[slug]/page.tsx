@@ -9,9 +9,9 @@ import { carregarCatalogo, obterConfig, obterProduto } from "@/lib/dados";
 import { temDesconto } from "@/lib/filtro";
 import { precoBRL } from "@/lib/formato";
 import { site } from "@/data/site.config";
+import { ehServico } from "@/lib/servicos";
 
 type Props = { params: Promise<{ slug: string }> };
-const SERVICOS = new Set(["atendimentos", "cursos"]);
 
 export async function generateStaticParams() {
   const { produtos } = await carregarCatalogo();
@@ -51,7 +51,7 @@ export default async function PaginaProduto({ params }: Props) {
   if (!produto) notFound();
 
   const categoria = categorias.find((c) => c.slug === produto.categoria_slug);
-  const atendimento = SERVICOS.has(produto.categoria_slug ?? "");
+  const atendimento = ehServico(produto);
   const promo = temDesconto(produto);
   const cheio = precoBRL(produto.preco);
   const vigente = precoBRL(produto.preco_promocional ?? produto.preco);
@@ -85,10 +85,10 @@ export default async function PaginaProduto({ params }: Props) {
 
       <div className="mx-auto max-w-[72rem] px-4 pb-20 pt-6 sm:px-6 lg:px-10 lg:pt-10">
         <nav aria-label="Você está em" className="miudo mb-6">
-          <Link href="/catalogo" className="hover:text-tinta">
-            A loja
+          <Link href={atendimento ? "/atendimentos" : "/catalogo"} className="hover:text-tinta">
+            {atendimento ? "Atendimentos" : "A loja"}
           </Link>
-          {categoria ? (
+          {categoria && !atendimento ? (
             <>
               <span className="px-2">/</span>
               <Link href={`/catalogo/${categoria.slug}`} className="hover:text-tinta">
@@ -103,7 +103,7 @@ export default async function PaginaProduto({ params }: Props) {
 
           <div className="lg:pt-2">
             <h1 className="manchete text-[clamp(1.5rem,3vw,2.125rem)] text-tinta">{produto.nome}</h1>
-            {produto.marca ? <p className="miudo mt-2">{produto.marca}</p> : null}
+            {categoria ? <p className="etiqueta mt-2">{categoria.nome}</p> : null}
 
             <div className="mt-6 border-y border-fio py-5">
               {vigente ? (
@@ -116,11 +116,46 @@ export default async function PaginaProduto({ params }: Props) {
                   {atendimento ? "Valor e horários na conversa." : "Preço na conversa."}
                 </p>
               )}
-              {produto.cores.length === 1 ? <p className="miudo mt-2">Cor: {produto.cores[0]}</p> : null}
             </div>
 
+            {/* a ficha: o que se sabe da peça, uma linha por coisa. O que
+                não se sabe não aparece; a observação do pedido cobre o resto. */}
             {produto.descricao ? (
               <p className="mt-6 max-w-[52ch] text-[0.9375rem] leading-relaxed text-tinta">{produto.descricao}</p>
+            ) : null}
+            {!atendimento ? (
+              <dl className="mt-5 grid grid-cols-[auto_minmax(0,1fr)] gap-x-6 gap-y-1.5 text-[0.9375rem]">
+                {categoria ? (
+                  <>
+                    <dt className="text-tinta-fraca">Categoria</dt>
+                    <dd className="text-tinta">
+                      <Link href={`/catalogo/${categoria.slug}`} className="hover:text-ametista">
+                        {categoria.nome}
+                      </Link>
+                    </dd>
+                  </>
+                ) : null}
+                {produto.marca ? (
+                  <>
+                    <dt className="text-tinta-fraca">Marca</dt>
+                    <dd className="text-tinta">{produto.marca}</dd>
+                  </>
+                ) : null}
+                {produto.cores.length === 1 ? (
+                  <>
+                    <dt className="text-tinta-fraca">Cor</dt>
+                    <dd className="text-tinta">{produto.cores[0]}</dd>
+                  </>
+                ) : null}
+                {produto.tamanhos.length ? (
+                  <>
+                    <dt className="text-tinta-fraca">Tamanhos</dt>
+                    <dd className="text-tinta">{produto.tamanhos.join(", ")}</dd>
+                  </>
+                ) : null}
+                <dt className="text-tinta-fraca">Código</dt>
+                <dd className="text-tinta">{produto.codigo}</dd>
+              </dl>
             ) : null}
 
             <div className="mt-8">

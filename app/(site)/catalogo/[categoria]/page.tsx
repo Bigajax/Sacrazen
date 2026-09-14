@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Catalogo } from "@/components/Catalogo";
-import { Regua } from "@/components/Moldura";
 import { carregarCatalogo, obterConfig } from "@/lib/dados";
+import { SERVICOS, separar } from "@/lib/servicos";
 import { linkGeral } from "@/lib/whatsapp";
 
 type Props = { params: Promise<{ categoria: string }> };
@@ -49,23 +49,28 @@ export default async function PaginaCategoria({ params }: Props) {
     obterConfig(),
   ]);
 
+  /* a mesa não é prateleira: quem cai aqui pela categoria vai para a
+     página dos atendimentos */
+  if (SERVICOS.has(categoria)) redirect("/atendimentos");
+
   const atual = categorias.find((c) => c.slug === categoria);
   if (!atual) notFound();
 
-  const ativos = produtos.filter((p) => p.ativo);
-  const quantas = ativos.filter((p) => p.categoria_slug === categoria).length;
+  const { pecas, categoriasDaLoja } = separar(produtos, categorias);
+  const quantas = pecas.filter((p) => p.categoria_slug === categoria).length;
 
   return (
     <>
-      <header className="mx-auto max-w-[72rem] px-4 pb-10 pt-12 sm:px-6 lg:px-10 lg:pb-14 lg:pt-16">
-        <Regua>{atual.nome}</Regua>
-        <p className="miudo mt-3">
-          {quantas} {quantas === 1 ? "peça" : "peças"}
+      <header className="mx-auto max-w-[72rem] px-4 pb-6 pt-8 sm:px-6 lg:px-10 lg:pb-8 lg:pt-12">
+        <p className="etiqueta">A prateleira</p>
+        <h1 className="manchete mt-2 text-[clamp(1.75rem,4vw,2.5rem)] text-tinta">{atual.nome}</h1>
+        <p className="falada mt-2 text-[1.0625rem] text-tinta-fraca">
+          {quantas} {quantas === 1 ? "peça" : "peças"} nesta prateleira.
         </p>
       </header>
       <Catalogo
-        produtos={ativos}
-        categorias={categorias}
+        produtos={pecas}
+        categorias={categoriasDaLoja}
         categoriaAtual={atual.slug}
         linkWhats={linkGeral(config.whatsapp)}
       />

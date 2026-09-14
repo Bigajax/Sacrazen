@@ -6,10 +6,8 @@ import { Portas } from "@/components/Portas";
 import { Prateleira } from "@/components/Prateleira";
 import { TrilhoRedondo } from "@/components/TrilhoRedondo";
 import { carregarCatalogo, obterConfig } from "@/lib/dados";
+import { separar } from "@/lib/servicos";
 import { linkGeral } from "@/lib/whatsapp";
-
-/* Categorias que são serviço, não peça de prateleira. */
-const SERVICOS = new Set(["atendimentos", "cursos"]);
 
 /* As portas da loja na home, nesta ordem. As outras categorias moram na
    estante (/catalogo) e no menu. */
@@ -19,9 +17,7 @@ export default async function Home() {
   const [{ categorias, produtos, hero }, config] = await Promise.all([carregarCatalogo(), obterConfig()]);
 
   const whats = linkGeral(config.whatsapp);
-  const ativos = produtos.filter((p) => p.ativo);
-  const atendimentos = ativos.filter((p) => SERVICOS.has(p.categoria_slug ?? "")).sort((a, b) => a.ordem - b.ordem);
-  const pecas = ativos.filter((p) => !SERVICOS.has(p.categoria_slug ?? ""));
+  const { atendimentos, pecas, categoriasDaLoja: loja } = separar(produtos, categorias);
 
   /* a foto do hero é a mesa de tarô: a primeira estrela que é atendimento */
   const fotoHero = hero.find((h) => atendimentos.some((a) => a.slug === h.slug))?.url;
@@ -35,7 +31,6 @@ export default async function Home() {
     .filter((p): p is NonNullable<typeof p> => Boolean(p));
   const placa = pecas.find((p) => p.slug.startsWith("gato-da-sorte"))?.imagens[0]?.url;
 
-  const loja = categorias.filter((c) => c.ativo && !SERVICOS.has(c.slug));
 
   return (
     <>
@@ -44,7 +39,7 @@ export default async function Home() {
 
       <Prateleira titulo="Destaques da loja" href="/catalogo" produtos={destaques} categorias={categorias} prioridade />
 
-      <TrilhoRedondo titulo="Atendimentos" href="/catalogo/atendimentos" itens={atendimentos} />
+      <TrilhoRedondo titulo="Atendimentos" href="/atendimentos" itens={atendimentos} />
 
       <Estante categorias={loja} produtos={pecas} ordem={NA_HOME} />
 

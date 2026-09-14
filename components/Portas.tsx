@@ -91,7 +91,7 @@ export function Portas({ atendimentos }: { atendimentos: Produto[] }) {
 
         {/* o mesmo botão do cartão: ametista cheia, texto branco */}
         <div className="flex items-center justify-center p-4 md:pl-6 md:pr-5">
-          <Link href="/catalogo/atendimentos" className="btn btn--cta w-full md:w-auto">
+          <Link href="/atendimentos" className="btn btn--cta w-full md:w-auto">
             Ver todos os atendimentos
           </Link>
         </div>

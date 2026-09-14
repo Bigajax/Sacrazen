@@ -44,7 +44,7 @@ export function Cabecalho({ categorias, linkWhats, avisoTopo = "" }: { categoria
           <Link href="/catalogo" className="titulo-cartao hidden text-tinta hover:text-ametista sm:block">
             Catálogo
           </Link>
-          <Link href="/catalogo/atendimentos" className="titulo-cartao hidden text-tinta hover:text-ametista md:block">
+          <Link href="/atendimentos" className="titulo-cartao hidden text-tinta hover:text-ametista md:block">
             Atendimentos
           </Link>
           <button

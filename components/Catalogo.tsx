@@ -95,26 +95,6 @@ export function Catalogo({
 
   const painelFiltros = (
     <div className="space-y-9">
-      <Grupo titulo="Categoria">
-        <ul>
-          <LinhaCategoria
-            href="/catalogo"
-            nome="Tudo"
-            quantidade={produtos.length}
-            ativa={!categoriaAtual}
-          />
-          {categorias.map((c) => (
-            <LinhaCategoria
-              key={c.slug}
-              href={`/catalogo/${c.slug}`}
-              nome={c.nome}
-              quantidade={produtos.filter((p) => p.categoria_slug === c.slug).length}
-              ativa={categoriaAtual === c.slug}
-            />
-          ))}
-        </ul>
-      </Grupo>
-
       {opcoesMarca.length > 1 ? (
         <Grupo titulo="Marca">
           <div className="flex flex-wrap gap-2">
@@ -191,8 +171,26 @@ export function Catalogo({
 
   return (
     <div className="mx-auto max-w-[72rem] px-4 pb-20 sm:px-6 lg:px-10">
-      {/* barra de comando: campos de linha, sem caixa, entre dois fios */}
-      <div className="flex flex-col gap-5 border-y border-fio py-5 sm:flex-row sm:items-center sm:gap-10">
+      {/* as categorias sempre à vista, num trilho de pílulas: no celular rola
+          de lado, no desktop cabe inteiro. É o filtro que mais se usa. */}
+      <nav aria-label="Categorias" className="faixa-scroll -mx-4 flex gap-2 overflow-x-auto px-4 pb-3 sm:-mx-6 sm:px-6 lg:mx-0 lg:flex-wrap lg:px-0">
+        <Link href="/catalogo" className={`chip chip--quadrado shrink-0 ${!categoriaAtual ? "chip--cheio" : ""}`} aria-current={!categoriaAtual ? "page" : undefined}>
+          Tudo
+        </Link>
+        {categorias.map((c) => (
+          <Link
+            key={c.slug}
+            href={`/catalogo/${c.slug}`}
+            className={`chip chip--quadrado shrink-0 ${categoriaAtual === c.slug ? "chip--cheio" : ""}`}
+            aria-current={categoriaAtual === c.slug ? "page" : undefined}
+          >
+            {c.nome}
+          </Link>
+        ))}
+      </nav>
+
+      {/* barra de comando: busca, contagem, ordem e o filtro fino */}
+      <div className="mt-2 flex flex-col gap-4 border-y border-fio py-4 sm:flex-row sm:items-center sm:gap-8">
         <div className="flex min-w-0 flex-1 items-center gap-4">
           <label
             htmlFor="busca-catalogo"
@@ -238,21 +236,17 @@ export function Catalogo({
             </select>
           </div>
 
-          <span className="ml-auto lg:hidden">
-            <button
-              type="button"
-              onClick={() => setFiltrosAbertos(true)}
-              className="btn btn--linha px-4 py-2.5"
-            >
-              Filtrar
-            </button>
-          </span>
+          {opcoesMarca.length > 1 || opcoesTamanho.length || faixa ? (
+            <span className="ml-auto">
+              <button type="button" onClick={() => setFiltrosAbertos(true)} className="btn btn--linha px-4 py-2.5" aria-expanded={filtrosAbertos}>
+                Filtrar{temFiltro ? " ·" : ""}
+              </button>
+            </span>
+          ) : null}
         </div>
       </div>
 
-      <div className="grid gap-10 pt-10 lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-14">
-        <aside className="hidden lg:block">{painelFiltros}</aside>
-
+      <div className="pt-6">
         <div>
           {lista.length ? (
             <>
@@ -301,7 +295,7 @@ export function Catalogo({
 
       {filtrosAbertos ? (
         <div
-          className="fixed inset-0 z-50 bg-noite/70 lg:hidden"
+          className="fixed inset-0 z-50 bg-noite/70"
           onClick={() => setFiltrosAbertos(false)}
         >
           <div
@@ -347,40 +341,5 @@ function Grupo({
       </h3>
       {children}
     </section>
-  );
-}
-
-/** Mesma leitura do índice da home: nome, fio e contagem. */
-function LinhaCategoria({
-  href,
-  nome,
-  quantidade,
-  ativa,
-}: {
-  href: string;
-  nome: string;
-  quantidade: number;
-  ativa: boolean;
-}) {
-  return (
-    <li>
-      <Link
-        href={href}
-        aria-current={ativa ? "page" : undefined}
-        data-ativo={ativa}
-        className="group flex items-center gap-3 border-b border-fio py-2.5 transition-colors hover:border-tinta"
-      >
-        <span
-          className={`min-w-0 flex-1 truncate text-[0.9375rem] transition-transform duration-[220ms] ease-out group-hover:translate-x-1 ${
-            ativa ? "text-tinta" : "text-tinta"
-          }`}
-        >
-          {nome}
-        </span>
-        <span className="mono shrink-0 text-[0.8125rem] text-tinta-fraca">
-          {quantidade}
-        </span>
-      </Link>
-    </li>
   );
 }

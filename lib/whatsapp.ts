@@ -11,19 +11,44 @@ export function linkWhatsApp(texto: string, whatsapp?: string): string {
   return `https://wa.me/${numero(whatsapp)}?text=${encodeURIComponent(texto)}`;
 }
 
-/** CTA de produto: identifica a peça pelo nome e manda o link da página. */
-export function linkPeca(
-  produto: Pick<Produto, "codigo" | "nome" | "slug">,
-  opcoes: { whatsapp?: string; base?: string; tamanho?: string; cor?: string } = {},
-): string {
+const BRL = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+
+export type Pedido = {
+  whatsapp?: string;
+  base?: string;
+  tamanho?: string;
+  cor?: string;
+  quantidade?: number;
+  observacao?: string;
+  preco?: number | null;
+};
+
+/**
+ * CTA de produto: a mensagem chega estruturada, uma linha por coisa, para
+ * quem atende não precisar perguntar o básico. O que a pessoa não
+ * preencheu não aparece; nada vira "undefined".
+ */
+export function linkPeca(produto: Pick<Produto, "codigo" | "nome" | "slug">, opcoes: Pedido = {}): string {
   const base = opcoes.base ?? site.url;
   const url = `${base.replace(/\/$/, "")}/produto/${produto.slug}`;
-  const escolhas = [
-    opcoes.tamanho ? `tamanho ${opcoes.tamanho}` : null,
-    opcoes.cor ? `cor ${opcoes.cor}` : null,
+  const quantidade = opcoes.quantidade && opcoes.quantidade > 0 ? opcoes.quantidade : 1;
+  const preco = opcoes.preco ?? null;
+
+  const linhas = [
+    "Oi! Vi no site e quero esta peça:",
+    `• ${produto.nome} (${produto.codigo})`,
+    `• Quantidade: ${quantidade}`,
+    opcoes.tamanho ? `• Tamanho: ${opcoes.tamanho}` : null,
+    opcoes.cor ? `• Cor: ${opcoes.cor}` : null,
+    opcoes.observacao?.trim() ? `• Obs.: ${opcoes.observacao.trim()}` : null,
+    preco !== null
+      ? `• Preço no site: ${BRL.format(preco)}${quantidade > 1 ? ` (total ${BRL.format(preco * quantidade)})` : ""}`
+      : "• Preço: a combinar",
+    "Ainda tem?",
+    url,
   ].filter(Boolean);
-  const detalhe = escolhas.length ? ` (${escolhas.join(", ")})` : "";
-  return linkWhatsApp(`Oi! Vi no site e queria essa peça: ${produto.nome}${detalhe}. Ainda tem? ${url}`, opcoes.whatsapp);
+
+  return linkWhatsApp(linhas.join("\n"), opcoes.whatsapp);
 }
 
 /** CTA de atendimento: a consulta se agenda, não se compra. */

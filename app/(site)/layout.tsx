@@ -1,11 +1,13 @@
 import { Cabecalho } from "@/components/Cabecalho";
 import { Rodape } from "@/components/Rodape";
 import { carregarCatalogo, obterConfig } from "@/lib/dados";
+import { separar } from "@/lib/servicos";
 import { linkGeral } from "@/lib/whatsapp";
 import { site } from "@/data/site.config";
 
 export default async function LayoutSite({ children }: { children: React.ReactNode }) {
-  const [{ categorias }, config] = await Promise.all([carregarCatalogo(), obterConfig()]);
+  const [{ categorias, produtos }, config] = await Promise.all([carregarCatalogo(), obterConfig()]);
+  const { categoriasDaLoja } = separar(produtos, categorias);
   const whats = linkGeral(config.whatsapp);
 
   return (
@@ -16,12 +18,11 @@ export default async function LayoutSite({ children }: { children: React.ReactNo
       >
         Ir para o conteúdo
       </a>
-      <Cabecalho categorias={categorias.filter((c) => c.ativo)} linkWhats={whats} avisoTopo={config.aviso_topo ?? ""} />
+      <Cabecalho categorias={categoriasDaLoja} linkWhats={whats} avisoTopo={config.aviso_topo ?? ""} />
       <main id="conteudo" className="flex-1">
         {children}
       </main>
       <Rodape
-        categorias={categorias.filter((c) => c.ativo)}
         linkWhats={whats}
         instagram={config.instagram || site.instagram}
         horario={config.horario ?? ""}
