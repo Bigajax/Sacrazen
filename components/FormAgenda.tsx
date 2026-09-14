@@ -96,12 +96,10 @@ export function FormAgenda({ opcoes, whatsapp }: { opcoes: Produto[]; whatsapp: 
           </div>
         </fieldset>
 
-        <div className="mt-5 flex items-center justify-between gap-4">
-          <button type="submit" className="btn btn--latao">
-            Chamar no WhatsApp
-          </button>
-          <span className="miudo max-w-[15ch] text-right">Dia, horário e valor se combinam na conversa.</span>
-        </div>
+        <button type="submit" className="btn btn--latao mt-5 w-full py-4">
+          Chamar no WhatsApp
+        </button>
+        <p className="miudo mt-3 text-center">Dia, horário e valor se combinam na conversa.</p>
       </form>
     </div>
   );
