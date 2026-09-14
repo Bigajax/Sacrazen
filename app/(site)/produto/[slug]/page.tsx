@@ -153,8 +153,6 @@ export default async function PaginaProduto({ params }: Props) {
                     <dd className="text-tinta">{produto.tamanhos.join(", ")}</dd>
                   </>
                 ) : null}
-                <dt className="text-tinta-fraca">Código</dt>
-                <dd className="text-tinta">{produto.codigo}</dd>
               </dl>
             ) : null}
 

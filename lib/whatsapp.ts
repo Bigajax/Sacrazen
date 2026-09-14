@@ -36,7 +36,7 @@ export function linkPeca(produto: Pick<Produto, "codigo" | "nome" | "slug">, opc
 
   const linhas = [
     "Oi! Vi no site e quero esta peça:",
-    `• ${produto.nome} (${produto.codigo})`,
+    `• ${produto.nome}`,
     `• Quantidade: ${quantidade}`,
     opcoes.tamanho ? `• Tamanho: ${opcoes.tamanho}` : null,
     opcoes.cor ? `• Cor: ${opcoes.cor}` : null,
