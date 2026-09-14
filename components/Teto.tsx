@@ -13,7 +13,8 @@
 const FASES = 8;
 const R = 13;
 
-function lua(cx: number, cy: number, k: number): string | null {
+export function lua(cx: number, cy: number, k: number, r = R): string | null {
+  const R = r;
   if (k === 0) return null; // lua nova: só o contorno
   if (k === FASES / 2) return `M ${cx} ${cy - R} A ${R} ${R} 0 1 1 ${cx} ${cy + R} A ${R} ${R} 0 1 1 ${cx} ${cy - R} Z`;
   const fase = (k / FASES) * Math.PI * 2;
@@ -60,6 +61,31 @@ export function Teto({ className = "" }: { className?: string }) {
         return (
           <g key={k} className="fase" style={{ ["--i" as string]: k }}>
             <circle cx={p.x} cy={p.y} r={R} fill="var(--noite)" opacity="0.85" />
+            {cheia ? <path d={cheia} fill="var(--latao)" stroke="none" /> : null}
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+/**
+ * As oito luas em linha, pequenas: o fio que separa as partes de um
+ * cartão, em vez de uma borda. A mesma geometria do teto.
+ */
+export function FioDeLuas({ className = "" }: { className?: string }) {
+  const r = 5;
+  const passo = 22;
+  const largura = passo * (FASES - 1) + r * 2 + 2;
+  return (
+    <svg viewBox={`0 0 ${largura} ${r * 2 + 2}`} className={className} aria-hidden="true" focusable="false" fill="none" stroke="var(--latao)" strokeWidth="0.8">
+      {Array.from({ length: FASES }, (_, k) => {
+        const cx = r + 1 + k * passo;
+        const cy = r + 1;
+        const cheia = lua(cx, cy, k, r);
+        return (
+          <g key={k}>
+            <circle cx={cx} cy={cy} r={r} />
             {cheia ? <path d={cheia} fill="var(--latao)" stroke="none" /> : null}
           </g>
         );

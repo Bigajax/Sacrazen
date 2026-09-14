@@ -2,19 +2,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { precoBRL } from "@/lib/formato";
 import { temDesconto } from "@/lib/filtro";
-import type { Produto } from "@/lib/tipos";
+import type { Categoria, Produto } from "@/lib/tipos";
 
 /**
- * A peça na prateleira: a foto como veio, o nome em uma ou duas linhas,
- * o preço em Cormorant. Sem caixa, sem sombra: o que separa uma peça da
- * outra é o espaço, e o fio de madeira embaixo do preço.
+ * O cartão do portal: foto em cima, a categoria como etiqueta, o nome em
+ * caixa alta e o preço. Branco, com borda, sem sombra até o hover.
  */
 export function CardProduto({
   produto,
+  categoria,
   prioridade = false,
-  tamanhos = "(max-width: 640px) 44vw, (max-width: 1024px) 30vw, 22vw",
+  tamanhos = "(max-width: 640px) 46vw, (max-width: 1024px) 30vw, 22vw",
 }: {
   produto: Produto;
+  categoria?: Categoria | null;
   prioridade?: boolean;
   tamanhos?: string;
 }) {
@@ -25,9 +26,9 @@ export function CardProduto({
   const atendimento = produto.categoria_slug === "atendimentos" || produto.categoria_slug === "cursos";
 
   return (
-    <article className="group">
-      <Link href={`/produto/${produto.slug}`} className="block rounded-md focus:outline-none focus-visible:outline">
-        <div className="foto aspect-[4/5]">
+    <article className="cartao h-full">
+      <Link href={`/produto/${produto.slug}`} className="flex h-full flex-col">
+        <div className="foto aspect-[4/3]">
           {capa ? (
             <Image
               src={capa.url}
@@ -37,21 +38,24 @@ export function CardProduto({
               placeholder={capa.blur ? "blur" : "empty"}
               blurDataURL={capa.blur ?? undefined}
               priority={prioridade}
-              className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+              className="object-cover"
             />
           ) : null}
         </div>
 
-        <div className="border-b border-[color:var(--fio)] pb-3 pt-3">
-          <h3 className="display-peca text-cera">{produto.nome}</h3>
-          {vigente ? (
-            <p className="preco mt-1 flex items-baseline gap-2 text-[1.25rem] text-latao">
-              {promo && cheio ? <span className="text-[0.9375rem] text-cera-fraca line-through">{cheio}</span> : null}
-              <span>{vigente}</span>
-            </p>
-          ) : (
-            <p className="miudo mt-1">{atendimento ? "Valor e horários no WhatsApp" : "Preço no WhatsApp"}</p>
-          )}
+        <div className="flex flex-1 flex-col p-4">
+          {categoria ? <p className="etiqueta">{categoria.nome}</p> : null}
+          <h3 className="titulo-cartao mt-1.5 text-tinta">{produto.nome}</h3>
+          <div className="mt-auto pt-3">
+            {vigente ? (
+              <p className="preco flex items-baseline gap-2 text-[1.0625rem] text-tinta">
+                {promo && cheio ? <span className="text-[0.8125rem] font-medium text-tinta-fraca line-through">{cheio}</span> : null}
+                <span>{vigente}</span>
+              </p>
+            ) : (
+              <p className="miudo">{atendimento ? "Valor na conversa" : "Preço no WhatsApp"}</p>
+            )}
+          </div>
         </div>
       </Link>
     </article>

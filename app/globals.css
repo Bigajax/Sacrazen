@@ -1,102 +1,101 @@
 @import "tailwindcss";
 
 /* ─────────────────────────────────────────────────────────────
-   SACRAZEN — tokens.
+   SACRAZEN — tokens (versão portal, 14/09).
 
-   A paleta é a da loja física, não de uma referência: a parede azul-
-   marinho, o teto pintado de céu noturno, as prateleiras de madeira
-   clara, a placa e o lustre de latão, a cera das velas. Nada fora disto.
+   Chão claro e cartões brancos, como num portal de conteúdo; a cor da
+   loja entra pela tinta (o azul-marinho da parede) e pelo latão da placa.
+   A noite fica para o hero e o rodapé, que são a fachada e o fecho.
 
-   Os nomes antigos da base (cimento, marrom, nude, off-white, tinta)
-   continuam existindo porque o painel administrativo é escrito neles.
-   Aqui eles viram um papel claro e neutro: o painel é da dona, não é
-   a vitrine, e não precisa da noite.
+   Os nomes herdados da base (cimento, marrom, nude, off-white) seguem
+   existindo porque o painel administrativo é escrito neles, e aqui
+   apontam para os mesmos valores do site: é um sistema só.
    ───────────────────────────────────────────────────────────── */
 @theme static {
+  --color-tinta: #1b2e5c;
+  --color-tinta-fraca: #5b6685;
+  --color-fundo: #f4f4f8;
+  --color-cartao: #ffffff;
+  --color-fio: #e1e3ec;
+  --color-fio-forte: #c7cad8;
+  --color-latao: #e0b349;
+  --color-latao-tinta: #9a7418;
+  --color-ametista: #6b4fa0;
+  --color-ametista-clara: #efeaf7;
   --color-noite: #0e1b36;
   --color-noite-funda: #091226;
   --color-parede: #1b2e5c;
-  --color-parede-clara: #27407a;
-  --color-madeira: #c9a46b;
-  --color-madeira-fraca: #8f7a55;
-  --color-latao: #e0b349;
   --color-cera: #f3ebd8;
   --color-cera-fraca: #b9b09a;
-  --color-ametista: #8b6bb1;
+  --color-madeira: #c9a46b;
   --color-brasa: #c0392b;
 
-  /* o painel, em papel */
-  --color-off-white: #faf7f1;
-  --color-cimento-claro: #f1ede4;
-  --color-cimento: #e6e1d5;
-  --color-cimento-medio: #cfc8b8;
-  --color-cimento-escuro: #8f8774;
-  --color-marrom: #6b5a3c;
-  --color-marrom-fundo: #4a3d27;
+  --color-off-white: #ffffff;
+  --color-cimento-claro: #f4f4f8;
+  --color-cimento: #e9eaf0;
+  --color-cimento-medio: #c7cad8;
+  --color-cimento-escuro: #8a90a8;
+  --color-marrom: #3b4d80;
+  --color-marrom-fundo: #1b2e5c;
   --color-nude: #e0b349;
-  --color-nude-claro: #f3e6c3;
-  --color-tinta: #1a1710;
-
+  --color-nude-claro: #f7ecc9;
 }
 
 :root {
+  --tinta: #1b2e5c;
+  --tinta-fraca: #5b6685;
+  --fundo: #f4f4f8;
+  --cartao: #ffffff;
+  --fio: #e1e3ec;
+  --fio-forte: #c7cad8;
+  --latao: #e0b349;
+  --latao-tinta: #9a7418;
+  --ametista: #6b4fa0;
+  --ametista-clara: #efeaf7;
   --noite: #0e1b36;
   --noite-funda: #091226;
-  --parede: #1b2e5c;
-  --parede-clara: #27407a;
-  --madeira: #c9a46b;
-  --madeira-fraca: #8f7a55;
-  --latao: #e0b349;
   --cera: #f3ebd8;
   --cera-fraca: #b9b09a;
-  --ametista: #8b6bb1;
-  --brasa: #c0392b;
+  --madeira: #c9a46b;
 
-  --off-white: #faf7f1;
-  --cimento-claro: #f1ede4;
-  --cimento: #e6e1d5;
-  --cimento-medio: #cfc8b8;
-  --cimento-escuro: #8f8774;
-  --marrom: #6b5a3c;
-  --marrom-fundo: #4a3d27;
+  --off-white: #ffffff;
+  --cimento-claro: #f4f4f8;
+  --cimento: #e9eaf0;
+  --cimento-medio: #c7cad8;
+  --cimento-escuro: #8a90a8;
+  --marrom: #3b4d80;
+  --marrom-fundo: #1b2e5c;
   --nude: #e0b349;
-  --tinta: #1a1710;
 
-  /* a linha da casa: madeira a 40%, sempre 1px. Nunca 2px, nunca cheia. */
-  --fio: color-mix(in srgb, var(--madeira) 40%, transparent);
-  --fio-forte: color-mix(in srgb, var(--madeira) 70%, transparent);
-  --transicao: 200ms ease-out;
-  --moldura-fora: 10px;
+  --raio: 8px;
+  --transicao: 180ms ease-out;
   --linha: var(--fio-forte);
   --linha-peso: 1px;
 }
 
 html {
-  background-color: var(--noite);
-  color-scheme: dark;
+  background-color: var(--fundo);
+  color-scheme: light;
 }
 
 /* As famílias moram no body, não no :root: as variáveis --fonte-* do
    next/font entram pela classe do body, e um var() que aponta para uma
-   variável que não existe no :root invalida a declaração inteira (foi
-   assim que a Cormorant sumiu e a Segoe entrou no lugar). */
+   variável que não existe no :root invalida a declaração inteira. */
 body {
-  --font-display: var(--fonte-display), "Cormorant Garamond", Georgia, serif;
-  --font-corpo: var(--fonte-corpo), "Inter", system-ui, sans-serif;
+  --font-display: var(--fonte-display), "Montserrat", system-ui, sans-serif;
+  --font-corpo: var(--fonte-display), "Montserrat", system-ui, sans-serif;
   --font-mono: var(--font-corpo);
-  color: var(--cera);
+  color: var(--tinta);
   font-family: var(--font-corpo);
-  font-size: 1rem;
+  font-size: 0.9375rem;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-/* O painel pinta o próprio chão: ver app/painel/layout.tsx */
 .papel {
-  background: var(--off-white);
+  background: var(--fundo);
   color: var(--tinta);
-  color-scheme: light;
 }
 
 ::selection {
@@ -105,69 +104,98 @@ body {
 }
 
 :where(a, button, input, select, textarea, [tabindex]):focus-visible {
-  outline: 2px solid var(--latao);
+  outline: 2px solid var(--ametista);
   outline-offset: 3px;
-}
-.papel :where(a, button, input, select, textarea, [tabindex]):focus-visible {
-  outline-color: var(--tinta);
 }
 
 /* ── tipografia ─────────────────────────────────────────────── */
-/* O nome na placa de latão: caixa alta, entreletra aberta. É o único
-   lugar em que o site escreve em caixa alta. */
-.placa {
+/* A manchete: pesada, apertada, como quem fala alto na entrada. */
+.manchete {
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+}
+/* O título de seção: caixa alta, peso 700, com o fio embaixo. */
+.secao {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.0625rem;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  letter-spacing: 0.22em;
-  line-height: 1;
+  line-height: 1.2;
 }
-.display {
+/* A etiqueta de cima do cartão: a categoria, em latão escuro. */
+.etiqueta {
   font-family: var(--font-display);
-  font-weight: 500;
-  line-height: 1.05;
-  letter-spacing: -0.005em;
+  font-weight: 700;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--latao-tinta);
 }
-.display-secao {
+/* O título do cartão: caixa alta, peso 700, corpo pequeno. */
+.titulo-cartao {
   font-family: var(--font-display);
-  font-weight: 500;
-  font-size: clamp(1.625rem, 2.6vw, 2.125rem);
-  line-height: 1.1;
-  letter-spacing: -0.005em;
-}
-.display-peca {
-  font-family: var(--font-corpo);
-  font-weight: 500;
-  font-size: 0.9375rem;
+  font-weight: 700;
+  font-size: 0.8125rem;
   line-height: 1.35;
-}
-.falada {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 400;
-  line-height: 1.25;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 .preco {
   font-family: var(--font-display);
-  font-weight: 500;
-  font-variant-numeric: lining-nums tabular-nums;
-  letter-spacing: 0.01em;
-}
-.mono {
-  font-family: var(--font-corpo);
-  font-weight: 500;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
-}
-.mono-rotulo {
-  font-family: var(--font-corpo);
-  font-weight: 500;
-  font-size: 0.8125rem;
-  letter-spacing: 0.01em;
 }
 .miudo {
   font-size: 0.8125rem;
   line-height: 1.5;
-  color: var(--cera-fraca);
+  color: var(--tinta-fraca);
+}
+/* nomes herdados pelo painel e pelas páginas de lista */
+.display-secao {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.0625rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+.display-peca {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+}
+.placa {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.falada {
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 1.45;
+}
+.mono {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.mono-rotulo {
+  font-weight: 700;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 /* ── controles ──────────────────────────────────────────────── */
@@ -176,12 +204,12 @@ body {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  border-radius: 999px;
-  font-family: var(--font-corpo);
-  font-weight: 500;
-  font-size: 0.9375rem;
+  border-radius: 6px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.875rem;
   line-height: 1;
-  padding: 0.9375rem 1.5rem;
+  padding: 0.875rem 1.375rem;
   transition: background-color var(--transicao), color var(--transicao),
     border-color var(--transicao);
   cursor: pointer;
@@ -191,58 +219,52 @@ body {
   opacity: 0.5;
   cursor: not-allowed;
 }
-/* latão sobre a noite: o único botão cheio da página */
+/* o botão cheio é tinta; o de WhatsApp, o único em latão */
 .btn--primario {
-  background: var(--latao);
-  color: var(--noite-funda);
+  background: var(--tinta);
+  color: #fff;
 }
 .btn--primario:hover:not(:disabled) {
-  background: var(--cera);
+  background: var(--noite);
+}
+.btn--latao {
+  background: var(--latao);
+  color: var(--noite);
+}
+.btn--latao:hover:not(:disabled) {
+  background: #ecc35e;
 }
 .btn--linha {
   border: 1px solid var(--fio-forte);
-  color: var(--cera);
+  color: var(--tinta);
+  background: var(--cartao);
 }
 .btn--linha:hover:not(:disabled) {
+  border-color: var(--tinta);
+}
+.btn--claro {
+  border: 1px solid rgba(243, 235, 216, 0.5);
+  color: var(--cera);
+}
+.btn--claro:hover:not(:disabled) {
   border-color: var(--cera);
 }
 .btn--texto {
   padding: 0.5rem 0;
   border-radius: 0;
-  color: var(--madeira);
-  text-decoration: underline;
-  text-underline-offset: 5px;
-  text-decoration-color: var(--fio);
+  color: var(--ametista);
+  font-size: 0.8125rem;
 }
 .btn--texto:hover:not(:disabled) {
-  color: var(--cera);
-  text-decoration-color: var(--madeira);
-}
-/* no papel do painel os mesmos botões ficam em tinta */
-.papel .btn--primario {
-  background: var(--marrom-fundo);
-  color: var(--off-white);
-}
-.papel .btn--primario:hover:not(:disabled) {
-  background: var(--tinta);
-}
-.papel .btn--linha {
-  border-color: var(--marrom);
-  color: var(--marrom-fundo);
-}
-.papel .btn--linha:hover:not(:disabled) {
-  background: var(--marrom-fundo);
-  color: var(--off-white);
-}
-.papel .btn--texto {
-  color: var(--marrom-fundo);
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 .campo {
   width: 100%;
-  border: 1px solid var(--cimento-medio);
+  border: 1px solid var(--fio-forte);
   border-radius: 6px;
-  background: var(--off-white);
+  background: var(--cartao);
   padding: 0.6875rem 0.875rem;
   font-family: var(--font-corpo);
   font-size: 0.9375rem;
@@ -254,7 +276,7 @@ body {
 }
 .campo:focus {
   outline: none;
-  border-color: var(--marrom-fundo);
+  border-color: var(--tinta);
 }
 .campo::placeholder {
   color: var(--cimento-escuro);
@@ -266,95 +288,72 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-/* busca: uma linha na madeira, não uma caixa */
+/* a busca: caixa branca com borda, como no portal */
 .busca-linha {
-  border: 0;
-  border-bottom: 1px solid var(--fio-forte);
-  background: transparent;
-  padding: 0.5rem 0.125rem;
+  border: 1px solid var(--fio-forte);
+  border-radius: 999px;
+  background: var(--cartao);
+  padding: 0.5rem 1rem;
   font-family: var(--font-corpo);
-  font-size: 0.9375rem;
-  color: var(--cera);
+  font-size: 0.875rem;
+  color: var(--tinta);
   transition: border-color var(--transicao);
 }
 .busca-linha::placeholder {
-  color: var(--cera-fraca);
+  color: var(--cimento-escuro);
 }
-.busca-linha:hover {
-  border-color: var(--madeira);
-}
-.busca-linha:focus,
-.busca-linha:focus-visible {
+.busca-linha:hover,
+.busca-linha:focus {
   outline: none;
-  border-color: var(--cera);
-}
-.busca-linha option {
-  color: var(--tinta);
-  background: var(--off-white);
-}
-.papel .busca-linha {
-  color: var(--tinta);
-  border-color: var(--marrom);
+  border-color: var(--tinta);
 }
 
-/* chip de filtro: pílula de linha; a escolhida acende em latão */
+/* chip de navegação: pílula cheia em tinta, como as tags do portal;
+   no filtro, a escolhida é a cheia e as outras são de linha */
 .chip {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  border: 1px solid var(--fio);
+  border: 1px solid var(--fio-forte);
   border-radius: 999px;
   padding: 0.4375rem 0.875rem;
-  font-family: var(--font-corpo);
-  font-size: 0.8125rem;
-  color: var(--cera);
-  background: transparent;
-  transition: border-color var(--transicao), color var(--transicao);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: var(--tinta);
+  background: var(--cartao);
+  transition: border-color var(--transicao), background-color var(--transicao), color var(--transicao);
   cursor: pointer;
 }
 .chip:hover {
-  border-color: var(--madeira);
+  border-color: var(--tinta);
 }
 .chip[aria-pressed="true"],
-.chip[data-ativo="true"] {
-  border-color: var(--latao);
-  color: var(--latao);
+.chip[data-ativo="true"],
+.chip--cheio {
+  border-color: var(--tinta);
+  background: var(--tinta);
+  color: #fff;
 }
-.papel .chip {
-  color: var(--tinta);
-  border-color: var(--cimento-medio);
-}
-.papel .chip[aria-pressed="true"],
-.papel .chip[data-ativo="true"] {
-  border-color: var(--marrom);
-  color: var(--marrom-fundo);
-  box-shadow: inset 0 0 0 1px var(--marrom);
+.chip--cheio:hover {
+  background: var(--noite);
 }
 
-/* ─────────────────────────────────────────────────────────────
-   A régua de seção: o título, e o fio que sai dele até a margem.
-   ───────────────────────────────────────────────────────────── */
+/* ── régua e moldura herdadas ───────────────────────────────── */
 .regua {
   display: flex;
   align-items: baseline;
+  justify-content: space-between;
   gap: 1rem;
+  border-bottom: 1px solid var(--fio);
+  padding-bottom: 0.625rem;
 }
-.regua::after {
-  content: "";
-  flex: 1 1 auto;
-  height: 1px;
-  background: var(--fio);
-  transform: translateY(-0.35em);
-}
-
-/* moldura simples do painel (herdada da base): um contorno que aparece
-   no hover ou no estado ativo, sem legenda */
 .moldura {
   position: absolute;
   inset: 0;
   pointer-events: none;
   border: 1px solid var(--linha);
-  border-radius: 8px;
+  border-radius: var(--raio);
 }
 .tem-moldura {
   position: relative;
@@ -368,15 +367,25 @@ body {
 .tem-moldura[data-ativa="true"] > .moldura {
   opacity: 1;
 }
-.papel .moldura {
-  border-color: var(--marrom);
+
+/* ── o cartão ───────────────────────────────────────────────── */
+.cartao {
+  background: var(--cartao);
+  border: 1px solid var(--fio);
+  border-radius: var(--raio);
+  overflow: hidden;
+  transition: border-color var(--transicao), box-shadow var(--transicao);
+}
+.cartao:hover {
+  border-color: var(--fio-forte);
+  box-shadow: 0 6px 20px -12px rgba(27, 46, 92, 0.35);
 }
 
 /* ─────────────────────────────────────────────────────────────
-   O teto. O céu pintado da loja, em código: um campo de estrelas
-   fixas (sem cintilar) e o anel das fases da lua em fio de latão.
+   O céu do hero: a noite da loja com o campo de estrelas fixas.
    ───────────────────────────────────────────────────────────── */
 .ceu {
+  background-color: var(--noite);
   background-image:
     radial-gradient(ellipse 70% 55% at 50% 0%, rgba(39, 64, 122, 0.55), transparent 70%),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cg fill='%23f3ebd8'%3E%3Ccircle cx='23' cy='41' r='.8' opacity='.7'/%3E%3Ccircle cx='97' cy='12' r='1.1' opacity='.55'/%3E%3Ccircle cx='151' cy='88' r='.7' opacity='.8'/%3E%3Ccircle cx='210' cy='31' r='.9' opacity='.5'/%3E%3Ccircle cx='266' cy='120' r='.6' opacity='.7'/%3E%3Ccircle cx='330' cy='58' r='1' opacity='.6'/%3E%3Ccircle cx='389' cy='140' r='.7' opacity='.5'/%3E%3Ccircle cx='47' cy='176' r='.6' opacity='.6'/%3E%3Ccircle cx='128' cy='223' r='1' opacity='.45'/%3E%3Ccircle cx='302' cy='205' r='.8' opacity='.7'/%3E%3Ccircle cx='372' cy='262' r='.6' opacity='.6'/%3E%3Ccircle cx='72' cy='301' r='.9' opacity='.5'/%3E%3Ccircle cx='191' cy='334' r='.7' opacity='.75'/%3E%3Ccircle cx='247' cy='389' r='1.1' opacity='.45'/%3E%3Ccircle cx='340' cy='356' r='.6' opacity='.7'/%3E%3Ccircle cx='15' cy='398' r='.8' opacity='.55'/%3E%3Ccircle cx='406' cy='22' r='.7' opacity='.65'/%3E%3C/g%3E%3C/svg%3E");
@@ -384,7 +393,6 @@ body {
   background-size: 100% 100%, 420px 420px;
 }
 
-/* as fases acendem uma a uma, uma vez, na chegada */
 @keyframes acender {
   from {
     opacity: 0;
@@ -407,8 +415,6 @@ body {
   scrollbar-width: none;
   -ms-overflow-style: none;
   scroll-snap-type: x proximity;
-  /* o snap alinha a peça com a borda do scrollport e ignora o padding:
-     sem isto a primeira peça encosta na margem da tela */
   scroll-padding-inline: 1rem;
 }
 @media (min-width: 640px) {
@@ -428,28 +434,14 @@ body {
   scroll-snap-align: start;
 }
 
-/* ── a foto, do jeito que veio ──────────────────────────────── */
-/* As fotos são do produto na mão, com o fundo do dia a dia. A moldura
-   é um vinhete suave da própria noite, para a borda da foto não bater
-   contra o azul. Nenhum recorte, nenhum fundo branco forçado. */
+/* a foto, do jeito que veio: sem recorte forçado, sem fundo branco */
 .foto {
   position: relative;
   overflow: hidden;
-  border-radius: 6px;
-  background: var(--parede);
-}
-.foto::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  border-radius: inherit;
-  box-shadow:
-    inset 0 0 0 1px rgba(201, 164, 107, 0.18),
-    inset 0 -40px 60px -30px rgba(9, 18, 38, 0.55);
+  background: var(--cimento);
 }
 
-/* ── letreiro rotativo do topo (herdado da base) ────────────── */
+/* ── letreiro rotativo (herdado) ────────────────────────────── */
 .marquee-janela {
   overflow: hidden;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
@@ -473,7 +465,6 @@ body {
   }
 }
 
-/* ── movimento ──────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

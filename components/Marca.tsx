@@ -1,12 +1,12 @@
+import Image from "next/image";
+
 /**
  * A logo da SacraZen: o Buda dentro da lótus e o letreiro condensado.
  *
- * O arquivo que a loja tem é um JPEG de 350px em fundo branco, marrom e
- * vermelho-terra. Sobre a noite ele não funciona como imagem, então ele
- * entra como MÁSCARA (public/marca/*.png, alfa tirado do desenho) e a cor
- * vem do CSS: cera no cabeçalho e no hero, madeira no rodapé. Fica nítido
- * até uns 170px de largura; acima disso o desenho de 350px estoura, e por
- * isso o nome grande do hero continua sendo tipografia.
+ * Em fundo claro ela entra como é, nas cores originais (marrom e
+ * vermelho-terra sobre branco): o arquivo tem 350px e aguenta até uns
+ * 150px de largura. Em fundo escuro (hero, rodapé) entra como máscara
+ * alfa pintada pela cor do texto (`public/marca/*.png`).
  */
 const PARTES = {
   buda: { arquivo: "/marca/buda.png", proporcao: 176 / 170 },
@@ -21,7 +21,6 @@ export function Marca({
   rotulo,
 }: {
   parte: keyof typeof PARTES;
-  /** em px, a altura desenhada; a largura sai da proporção do desenho */
   altura: number;
   className?: string;
   rotulo?: string;
@@ -47,4 +46,10 @@ export function Marca({
       }}
     />
   );
+}
+
+/** A logo original, em cores, para fundo claro. */
+export function LogoOriginal({ className = "" }: { className?: string }) {
+  /* o tamanho vem das classes de altura e largura, para mudar por breakpoint */
+  return <Image src="/marca/original.jpg" alt="SacraZen" width={350} height={350} sizes="180px" priority className={className} />;
 }

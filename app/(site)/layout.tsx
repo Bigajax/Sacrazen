@@ -12,15 +12,20 @@ export default async function LayoutSite({ children }: { children: React.ReactNo
     <div className="flex min-h-screen flex-col">
       <a
         href="#conteudo"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-latao focus:px-4 focus:py-3 focus:text-noite"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-tinta focus:px-4 focus:py-3 focus:text-white"
       >
         Ir para o conteúdo
       </a>
-      <Cabecalho avisoTopo={config.aviso_topo ?? ""} linkWhats={whats} />
+      <Cabecalho categorias={categorias.filter((c) => c.ativo)} linkWhats={whats} avisoTopo={config.aviso_topo ?? ""} />
       <main id="conteudo" className="flex-1">
         {children}
       </main>
-      <Rodape categorias={categorias} linkWhats={whats} instagram={config.instagram || site.instagram} />
+      <Rodape
+        categorias={categorias.filter((c) => c.ativo)}
+        linkWhats={whats}
+        instagram={config.instagram || site.instagram}
+        horario={config.horario ?? ""}
+      />
     </div>
   );
 }

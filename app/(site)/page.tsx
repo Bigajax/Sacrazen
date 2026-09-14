@@ -1,15 +1,19 @@
-import { Atendimentos } from "@/components/Atendimentos";
+import { Chips } from "@/components/Chips";
 import { FaixaLoja } from "@/components/FaixaLoja";
 import { Hero } from "@/components/Hero";
-import { Trilho } from "@/components/Trilho";
+import { Numeros } from "@/components/Numeros";
+import { Portas } from "@/components/Portas";
+import { Prateleira } from "@/components/Prateleira";
+import { TrilhoRedondo } from "@/components/TrilhoRedondo";
 import { carregarCatalogo, obterConfig } from "@/lib/dados";
 import { linkGeral } from "@/lib/whatsapp";
-import { configPadrao } from "@/data/site.config";
 
-/* Quantas peças cada prateleira mostra antes do "+N na estante". */
-const POR_TRILHO = 8;
 /* Categorias que são serviço, não peça de prateleira. */
 const SERVICOS = new Set(["atendimentos", "cursos"]);
+
+/* As prateleiras da home, nesta ordem. O resto fica para as pílulas e
+   para a estante. */
+const NA_HOME = ["cristais", "incensos-e-oleos", "velas", "taro-e-oraculos", "imagens-e-gnomos", "altar-e-defumacao"];
 
 export default async function Home() {
   const [{ categorias, produtos, hero }, config] = await Promise.all([carregarCatalogo(), obterConfig()]);
@@ -17,39 +21,49 @@ export default async function Home() {
   const whats = linkGeral(config.whatsapp);
   const ativos = produtos.filter((p) => p.ativo);
   const atendimentos = ativos.filter((p) => SERVICOS.has(p.categoria_slug ?? "")).sort((a, b) => a.ordem - b.ordem);
+  const pecas = ativos.filter((p) => !SERVICOS.has(p.categoria_slug ?? ""));
 
-  /* a foto do hero é a primeira estrela que NÃO é atendimento: a peça
-     prova que a loja existe melhor do que a mesa de tarô */
-  const fotoHero = hero.find((h) => !atendimentos.some((a) => a.slug === h.slug)) ?? hero[0];
+  /* a foto do hero é a mesa de tarô: a primeira estrela que é atendimento */
+  const fotoHero = hero.find((h) => atendimentos.some((a) => a.slug === h.slug))?.url;
+  /* as estrelas que não são atendimento abrem a loja */
+  const destaques = hero
+    .map((h) => pecas.find((p) => p.slug === h.slug))
+    .filter((p): p is NonNullable<typeof p> => Boolean(p));
+  const placa = pecas.find((p) => p.slug.startsWith("gato-da-sorte"))?.imagens[0]?.url;
 
-  const prateleiras = categorias
-    .filter((c) => c.ativo && !SERVICOS.has(c.slug))
-    .map((c) => {
-      const dentro = ativos.filter((p) => p.categoria_slug === c.slug).sort((a, b) => a.ordem - b.ordem);
-      return { categoria: c, produtos: dentro.slice(0, POR_TRILHO), quantas: dentro.length };
-    })
-    .filter((t) => t.quantas > 0);
+  const prateleiras = NA_HOME.map((slug) => {
+    const categoria = categorias.find((c) => c.slug === slug);
+    if (!categoria) return null;
+    const dentro = pecas.filter((p) => p.categoria_slug === slug && !destaques.includes(p)).sort((a, b) => a.ordem - b.ordem);
+    return dentro.length ? { categoria, produtos: dentro } : null;
+  }).filter((t): t is NonNullable<typeof t> => Boolean(t));
+
+  const loja = categorias.filter((c) => c.ativo && !SERVICOS.has(c.slug));
 
   return (
     <>
-      <Hero frase={config.frase_hero || configPadrao.frase_hero} foto={fotoHero} linkWhats={whats} />
+      <Hero foto={fotoHero} atendimentos={atendimentos} whatsapp={config.whatsapp} />
+      <Portas atendimentos={atendimentos} />
 
-      <Atendimentos atendimentos={atendimentos} whatsapp={config.whatsapp} />
+      <Prateleira titulo="Destaques da loja" href="/catalogo" produtos={destaques} categorias={categorias} prioridade />
+      <Chips categorias={loja} />
 
-      <div id="loja" className="mx-auto mt-14 scroll-mt-24 max-w-[72rem] px-4 sm:px-6 lg:mt-20 lg:px-10">
-        <div className="regua">
-          <h2 className="display-secao text-cera">A loja</h2>
-        </div>
-        <p className="falada mt-3 max-w-[40ch] text-[1.25rem] text-cera-fraca">
-          {ativos.length - atendimentos.length} peças, do jeito que estão na prateleira. Toque numa para pedir.
-        </p>
-      </div>
+      <TrilhoRedondo titulo="Atendimentos" href="/catalogo/atendimentos" itens={atendimentos} />
 
-      {prateleiras.map((t, i) => (
-        <Trilho key={t.categoria.id} categoria={t.categoria} produtos={t.produtos} quantas={t.quantas} prioridade={i === 0} />
+      {prateleiras.map((t) => (
+        <Prateleira
+          key={t.categoria.slug}
+          titulo={t.categoria.nome}
+          href={`/catalogo/${t.categoria.slug}`}
+          produtos={t.produtos}
+          categorias={categorias}
+          mostrarCategoria={false}
+        />
       ))}
 
-      <FaixaLoja endereco={config.endereco ?? ""} horario={config.horario ?? ""} linkWhats={whats} />
+      <FaixaLoja endereco={config.endereco ?? ""} horario={config.horario ?? ""} linkWhats={whats} foto={placa} />
+
+      <Numeros pecas={pecas.filter((p) => p.preco !== null).length} />
     </>
   );
 }

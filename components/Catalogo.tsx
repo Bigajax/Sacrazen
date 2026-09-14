@@ -192,11 +192,11 @@ export function Catalogo({
   return (
     <div className="mx-auto max-w-[72rem] px-4 pb-20 sm:px-6 lg:px-10">
       {/* barra de comando: campos de linha, sem caixa, entre dois fios */}
-      <div className="flex flex-col gap-5 border-y border-[color:var(--fio)] py-5 sm:flex-row sm:items-center sm:gap-10">
+      <div className="flex flex-col gap-5 border-y border-fio py-5 sm:flex-row sm:items-center sm:gap-10">
         <div className="flex min-w-0 flex-1 items-center gap-4">
           <label
             htmlFor="busca-catalogo"
-            className="mono-rotulo hidden shrink-0 text-madeira sm:block"
+            className="mono-rotulo hidden shrink-0 text-ametista sm:block"
           >
             Buscar
           </label>
@@ -211,15 +211,15 @@ export function Catalogo({
         </div>
 
         <div className="flex items-center gap-6">
-          <p className="mono shrink-0 text-[0.8125rem] text-cera-fraca">
-            <span className="preco text-[1.25rem] text-cera">{lista.length}</span>{" "}
+          <p className="mono shrink-0 text-[0.8125rem] text-tinta-fraca">
+            <span className="preco text-[1.125rem] text-tinta">{lista.length}</span>{" "}
             {lista.length === 1 ? "peça" : "peças"}
           </p>
 
           <div className="flex items-center gap-3">
             <label
               htmlFor="ordem"
-              className="mono-rotulo hidden shrink-0 text-madeira md:block"
+              className="mono-rotulo hidden shrink-0 text-ametista md:block"
             >
               Ordem
             </label>
@@ -256,9 +256,9 @@ export function Catalogo({
         <div>
           {lista.length ? (
             <>
-              <div className="grid grid-cols-2 gap-x-5 gap-y-12 sm:grid-cols-3 sm:gap-x-8 lg:grid-cols-4 lg:gap-x-10 lg:gap-y-16">
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 lg:gap-5">
                 {lista.slice(0, visiveis).map((p, i) => (
-                  <CardProduto key={p.id} produto={p} prioridade={i < 4} />
+                  <CardProduto key={p.id} produto={p} categoria={categorias.find((c) => c.slug === p.categoria_slug)} prioridade={i < 4} />
                 ))}
               </div>
               {visiveis < lista.length ? (
@@ -274,11 +274,11 @@ export function Catalogo({
               ) : null}
             </>
           ) : (
-            <div className="mx-auto max-w-md rounded-lg border border-[color:var(--fio)] p-10 text-center">
-              <p className="display text-[1.375rem] text-cera">
+            <div className="mx-auto max-w-md cartao p-10 text-center">
+              <p className="manchete text-[1.25rem] text-tinta">
                 Nenhuma peça com esses filtros
               </p>
-              <p className="mt-3 text-sm leading-relaxed text-cera">
+              <p className="mt-3 text-sm leading-relaxed text-tinta">
                 Limpe os filtros ou pergunte no WhatsApp: a loja tem mais do que a vitrine mostra.
               </p>
               <div className="mt-7 flex flex-wrap justify-center gap-3">
@@ -301,19 +301,19 @@ export function Catalogo({
 
       {filtrosAbertos ? (
         <div
-          className="fixed inset-0 z-50 bg-noite-funda/80 lg:hidden"
+          className="fixed inset-0 z-50 bg-noite/70 lg:hidden"
           onClick={() => setFiltrosAbertos(false)}
         >
           <div
-            className="ml-auto flex h-full w-[min(22rem,90vw)] flex-col overflow-y-auto bg-parede p-6"
+            className="ml-auto flex h-full w-[min(22rem,90vw)] flex-col overflow-y-auto bg-cartao p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-8 flex items-center justify-between">
-              <span className="mono-rotulo text-madeira">Filtros</span>
+              <span className="mono-rotulo text-ametista">Filtros</span>
               <button
                 type="button"
                 onClick={() => setFiltrosAbertos(false)}
-                className="mono-rotulo text-madeira"
+                className="mono-rotulo text-ametista"
               >
                 Fechar
               </button>
@@ -368,16 +368,16 @@ function LinhaCategoria({
         href={href}
         aria-current={ativa ? "page" : undefined}
         data-ativo={ativa}
-        className="group flex items-center gap-3 border-b border-[color:var(--fio)] py-2.5 transition-colors hover:border-madeira"
+        className="group flex items-center gap-3 border-b border-fio py-2.5 transition-colors hover:border-tinta"
       >
         <span
           className={`min-w-0 flex-1 truncate text-[0.9375rem] transition-transform duration-[220ms] ease-out group-hover:translate-x-1 ${
-            ativa ? "text-latao" : "text-cera"
+            ativa ? "text-tinta" : "text-tinta"
           }`}
         >
           {nome}
         </span>
-        <span className="preco shrink-0 text-[0.9375rem] text-madeira">
+        <span className="mono shrink-0 text-[0.8125rem] text-tinta-fraca">
           {quantidade}
         </span>
       </Link>

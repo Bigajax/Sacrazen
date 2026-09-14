@@ -36,10 +36,13 @@ loja contratar).
 
 ## A identidade, em uma linha
 
-A paleta é a da loja física: parede azul-marinho, teto pintado de céu noturno,
-madeira clara, latão da placa, cera das velas. Cormorant Garamond para o nome,
-os títulos e os preços; Inter para o resto. O teto de luas do hero é SVG
-desenhado em código (`components/Teto.tsx`).
+Estrutura de portal (referência: Personare): hero com foto e o cartão de
+agendar por cima, a faixa de três atendimentos atravessando o pé do hero,
+grades de cartões brancos com etiqueta de categoria, pílulas de navegação,
+trilho de rodinhas dos atendimentos, a loja física, os números, rodapé na
+noite. Montserrat em tudo, o peso faz a hierarquia. A cor da loja entra
+pela tinta (azul-marinho da parede), o latão da placa e o roxo-ametista.
+A versão anterior, escura e serifada, está no branch `noite`.
 
 ## Capturas
 

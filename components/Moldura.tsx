@@ -9,7 +9,7 @@ export function Moldura(_props: { legenda?: string; aresta?: "topo" | "base"; cl
 export function Regua({ children, id }: { children: React.ReactNode; id?: string }) {
   return (
     <div className="regua">
-      <h2 id={id} className="display-secao text-cera">
+      <h2 id={id} className="secao text-tinta">
         {children}
       </h2>
     </div>

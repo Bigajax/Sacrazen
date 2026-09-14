@@ -85,34 +85,34 @@ export default async function PaginaProduto({ params }: Props) {
 
       <div className="mx-auto max-w-[72rem] px-4 pb-20 pt-6 sm:px-6 lg:px-10 lg:pt-10">
         <nav aria-label="Você está em" className="miudo mb-6">
-          <Link href="/catalogo" className="hover:text-cera">
+          <Link href="/catalogo" className="hover:text-tinta">
             A loja
           </Link>
           {categoria ? (
             <>
               <span className="px-2">/</span>
-              <Link href={`/catalogo/${categoria.slug}`} className="hover:text-cera">
+              <Link href={`/catalogo/${categoria.slug}`} className="hover:text-tinta">
                 {categoria.nome}
               </Link>
             </>
           ) : null}
         </nav>
 
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16">
+        <div className="cartao grid gap-8 p-4 sm:p-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-12 lg:p-8">
           <GaleriaProduto imagens={produto.imagens} nome={produto.nome} />
 
           <div className="lg:pt-2">
-            <h1 className="display text-[clamp(1.75rem,3.4vw,2.5rem)] text-cera">{produto.nome}</h1>
+            <h1 className="manchete text-[clamp(1.5rem,3vw,2.125rem)] text-tinta">{produto.nome}</h1>
             {produto.marca ? <p className="miudo mt-2">{produto.marca}</p> : null}
 
-            <div className="mt-7 border-y border-[color:var(--fio)] py-6">
+            <div className="mt-6 border-y border-fio py-5">
               {vigente ? (
-                <p className="preco flex items-baseline gap-3 text-[2rem] text-latao">
-                  {promo && cheio ? <span className="text-[1.125rem] text-cera-fraca line-through">{cheio}</span> : null}
+                <p className="preco flex items-baseline gap-3 text-[1.75rem] text-tinta">
+                  {promo && cheio ? <span className="text-[1.125rem] text-tinta-fraca line-through">{cheio}</span> : null}
                   <span>{vigente}</span>
                 </p>
               ) : (
-                <p className="falada text-[1.375rem] text-cera">
+                <p className="falada text-[1.125rem] text-tinta">
                   {atendimento ? "Valor e horários na conversa." : "Preço na conversa."}
                 </p>
               )}
@@ -120,7 +120,7 @@ export default async function PaginaProduto({ params }: Props) {
             </div>
 
             {produto.descricao ? (
-              <p className="mt-6 max-w-[52ch] text-[0.9375rem] leading-relaxed text-cera">{produto.descricao}</p>
+              <p className="mt-6 max-w-[52ch] text-[0.9375rem] leading-relaxed text-tinta">{produto.descricao}</p>
             ) : null}
 
             <div className="mt-8">
@@ -134,9 +134,9 @@ export default async function PaginaProduto({ params }: Props) {
             <Regua id="titulo-parecidos">
               {atendimento ? "Outros atendimentos" : `Mais em ${categoria?.nome ?? "a loja"}`}
             </Regua>
-            <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 lg:grid-cols-4 lg:gap-x-8">
+            <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-5">
               {parecidos.map((p) => (
-                <CardProduto key={p.id} produto={p} />
+                <CardProduto key={p.id} produto={p} categoria={categoria} />
               ))}
             </div>
           </section>

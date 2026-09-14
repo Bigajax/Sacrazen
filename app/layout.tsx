@@ -1,21 +1,15 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Inter } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import { site } from "@/data/site.config";
 import "./globals.css";
 
-/* Cormorant é a display: o nome na placa, os títulos, os preços e a
-   frase falada em itálico. A Inter faz todo o resto e não aparece. */
-const display = Cormorant_Garamond({
+/* Uma família só, a Montserrat, como nos portais de conteúdo: o peso faz
+   a hierarquia (800 na manchete, 700 nos títulos em caixa alta, 400 e 500
+   no corpo). */
+const display = Montserrat({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
+  weight: ["400", "500", "600", "700", "800"],
   variable: "--fonte-display",
-  display: "swap",
-});
-
-const corpo = Inter({
-  subsets: ["latin"],
-  variable: "--fonte-corpo",
   display: "swap",
 });
 
@@ -42,7 +36,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${display.variable} ${corpo.variable} antialiased`}>{children}</body>
+      <body className={`${display.variable} antialiased`}>{children}</body>
     </html>
   );
 }

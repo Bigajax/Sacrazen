@@ -1,72 +1,56 @@
 import Image from "next/image";
-import Link from "next/link";
-import { Marca } from "./Marca";
+import { FormAgenda } from "./FormAgenda";
 import { Teto } from "./Teto";
 import { site } from "@/data/site.config";
-import type { Imagem } from "@/lib/tipos";
-
-type FotoHero = Imagem & { slug?: string };
+import type { Produto } from "@/lib/tipos";
 
 /**
- * A primeira tela é a entrada da loja: o teto de céu com as luas por
- * cima, a placa de latão com o nome, a frase de quem atende. Uma foto
- * só, pequena, para provar que a loja existe; nada de banner.
- *
- * Fecha em 520px no celular por regra: a primeira fileira do catálogo
- * precisa aparecer sem rolar, senão muita gente não desce.
+ * A fachada: foto da mesa ao fundo, a noite da loja por cima, a
+ * manchete à esquerda e o cartão de agendar à direita, como um portal.
+ * O teto de luas fica em fio, no alto, como assinatura da casa.
  */
-export function Hero({ frase, foto, linkWhats }: { frase: string; foto?: FotoHero; linkWhats: string }) {
+export function Hero({ foto, atendimentos, whatsapp }: { foto?: string; atendimentos: Produto[]; whatsapp: string }) {
   return (
-    <section className="ceu relative overflow-hidden">
-      <div className="mx-auto max-w-[72rem] px-4 pb-10 pt-4 sm:px-6 lg:px-10 lg:pb-16 lg:pt-8">
-        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_16rem]">
-          <div className="text-center lg:text-left">
-            {/* a entrada da loja: o teto de luas por cima, o Buda da placa embaixo
-                do ápice, e o nome. É a fachada, vista de quem chega. */}
-            <div className="relative mx-auto w-full max-w-[30rem] lg:mx-0 lg:max-w-[38rem]">
-              <Teto className="h-[5.5rem] w-full lg:h-[7rem]" />
-              <div className="flex justify-center text-cera">
-                <Marca parte="buda" altura={80} className="-mt-9 lg:-mt-11" />
-              </div>
-            </div>
-            <h1 className="placa mt-3 text-[clamp(2.6rem,11vw,5.25rem)] text-cera">SacraZen</h1>
+    <section className="ceu relative overflow-hidden text-cera">
+      {foto ? (
+        <div className="absolute inset-0" aria-hidden="true">
+          <Image src={foto} alt="" fill priority sizes="100vw" className="object-cover object-[center_18%] opacity-40" />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(14,27,54,0.96)_0%,rgba(14,27,54,0.78)_45%,rgba(14,27,54,0.35)_100%)]" />
+          <div className="absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(180deg,transparent,rgba(14,27,54,0.9))]" />
+        </div>
+      ) : null}
 
-            <p className="falada mx-auto mt-4 max-w-[26ch] text-[clamp(1.375rem,3.4vw,1.875rem)] text-cera lg:mx-0">
-              {frase}
-            </p>
+      <Teto className="pointer-events-none absolute left-1/2 top-3 h-16 w-[26rem] max-w-[90vw] -translate-x-1/2 opacity-70 lg:h-20 lg:w-[34rem]" />
 
-            <div className="mt-7 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
-              <a href={linkWhats} target="_blank" rel="noreferrer" className="btn btn--primario">
-                Chamar no WhatsApp
-              </a>
-              <Link href="#loja" className="btn btn--linha">
-                Ver a loja
-              </Link>
-            </div>
+      <div className="relative mx-auto grid max-w-[72rem] gap-8 px-4 pb-24 pt-20 sm:px-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-16 lg:px-10 lg:pb-28 lg:pt-28">
+        <div>
+          <p className="etiqueta text-latao">Mãe Meli e Pai Gustavo, desde {site.desde}</p>
 
-            <p className="miudo mt-6">
-              {site.google.nota} no Google, {site.google.avaliacoes} avaliações. Uberaba, desde {site.desde}.
-            </p>
-          </div>
+          {/* três verbos, as três portas da loja: a mesa, o altar, a prateleira.
+              A última linha é a placa de latão da entrada. */}
+          <h1 className="manchete mt-4 text-[clamp(1.875rem,4.6vw,3.25rem)] text-white">
+            Pergunta pro tarô.
+            <br />
+            Acende a vela.
+            <br />
+            Leva o cristal.
+          </h1>
+          <p className="mt-4 inline-block rounded-md border-2 border-latao px-3 py-1.5 text-[clamp(1rem,2vw,1.375rem)] font-bold text-latao">
+            A loja esotérica de Uberaba
+          </p>
 
-          {foto ? (
-            <Link
-              href={foto.slug ? `/produto/${foto.slug}` : "/catalogo"}
-              className="foto mx-auto hidden aspect-[4/5] w-full max-w-[16rem] lg:block"
-              aria-label={foto.alt ?? "Ver a peça"}
-            >
-              <Image
-                src={foto.url}
-                alt={foto.alt ?? ""}
-                fill
-                priority
-                sizes="16rem"
-                placeholder={foto.blur ? "blur" : "empty"}
-                blurDataURL={foto.blur ?? undefined}
-                className="object-cover"
-              />
-            </Link>
-          ) : null}
+          <p className="falada mt-6 max-w-[44ch] text-[1.0625rem] text-cera/85">
+            Dois pais de santo lendo juntos. E a prateleira com o que a mesa pediu: incenso, vela, imagem, cristal.
+          </p>
+
+          <p className="mt-5 flex items-center gap-2 text-[0.8125rem] text-cera-fraca">
+            <span aria-hidden="true" className="tracking-[0.15em] text-latao">★★★★★</span>
+            {site.google.nota} no Google, {site.google.avaliacoes} pessoas avaliaram.
+          </p>
+        </div>
+
+        <div className="lg:justify-self-end lg:w-[26rem]">
+          <FormAgenda opcoes={atendimentos} whatsapp={whatsapp} />
         </div>
       </div>
     </section>
